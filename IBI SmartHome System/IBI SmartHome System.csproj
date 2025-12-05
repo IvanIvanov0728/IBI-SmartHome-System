@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IBI SmartHome System.Data\IBI SmartHome System.Data.csproj" />
+  </ItemGroup>
+
 </Project>
