@@ -16,13 +16,14 @@ namespace IBI_SmartHome_System.Data
         }
 
 		#region Tables
-		/*
+		
             public DbSet<Room> Rooms { get; set; }
             public DbSet<Device> Devices { get; set; }
             public DbSet<MqttMessage> MqttMessages { get; set; }
             public DbSet<Lamp> Lamps { get; set; }
             public DbSet<Temperature> Temperature { get; set; }
-         */
+			public DbSet<MotionSensor> MotionSensors { get; set; }
+
 		#endregion
 
 
@@ -40,7 +41,7 @@ namespace IBI_SmartHome_System.Data
 			base.OnModelCreating(modelBuilder);
 
 				#region Flush API Configurations
-			modelBuilder.Entity<Device>()
+				modelBuilder.Entity<Device>()
 					.HasOne(d => d.Room)
 					.WithMany(r => r.Devices)
 					.HasForeignKey(d => d.RoomId);
@@ -54,7 +55,12 @@ namespace IBI_SmartHome_System.Data
 					.HasOne(t => t.Device)
 					.WithOne(d => d.Temperature)
 					.HasForeignKey<Temperature>(t => t.DeviceId);
-				
+
+				modelBuilder.Entity<MotionSensor>()
+					.HasOne(ms => ms.Device)
+					.WithOne(d => d.MotionSensor)
+					.HasForeignKey<MotionSensor>(ms => ms.DeviceId);
+
 				modelBuilder.Entity<MqttMessage>()
 					.HasOne(mm => mm.Device)
 					.WithMany(d => d.MqttMessages)
