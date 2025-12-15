@@ -1,6 +1,7 @@
 ﻿using IBI_SmartHome_System.Data;
 using IBI_SmartHome_System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MQTTnet;
@@ -13,21 +14,28 @@ namespace IBI_SmartHome_System.Service
 	{
 		private readonly IServiceProvider _sp;
 		private IMqttClient _client;
+		private readonly IConfiguration _config;
 
-		public MqttService(IServiceProvider sp)
+		public MqttService(IServiceProvider sp, IConfiguration config)
 		{
 			_sp = sp;
+			_config = config;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
+			var Host = _config["ConnectionForHive:Host"];
+			var Port = int.Parse(_config["ConnectionForHive:Port"]);
+			var Username = _config["ConnectionForHive:Username"];
+			var Password = _config["ConnectionForHive:Password"];
+
 			var factory = new MqttFactory();
 			_client = factory.CreateMqttClient();
 
 			var options = new MqttClientOptionsBuilder()
-				.WithTcpServer("153947e05ca646e7876e9c5f99923ee1.s1.eu.hivemq.cloud", 8883)
-				.WithCredentials("TestMqttEsp32", "I9856418998van")
-				.WithTls()   // TLS REQUIRED
+				.WithTcpServer(Host, Port)
+				.WithCredentials(Username, Password)
+				.WithTls()
 				.Build();
 
 			_client.ApplicationMessageReceivedAsync += async e =>
@@ -86,7 +94,7 @@ namespace IBI_SmartHome_System.Service
 					if (e.ApplicationMessage.Topic == "esp32/motion")
 					{
 
-						var sensors = await db.MotionSensors
+						var sensors = await db.MotionSensor
 							.Include(t => t.Device)
 							.ThenInclude(d => d.Room)
 							.ToListAsync();

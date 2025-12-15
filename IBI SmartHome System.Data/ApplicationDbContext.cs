@@ -16,13 +16,12 @@ namespace IBI_SmartHome_System.Data
         }
 
 		#region Tables
-		
-            public DbSet<Room> Rooms { get; set; }
-            public DbSet<Device> Devices { get; set; }
+            public DbSet<Room> Room { get; set; }
+            public DbSet<Device> Device { get; set; }
             public DbSet<MqttMessage> MqttMessages { get; set; }
             public DbSet<Lamp> Lamps { get; set; }
             public DbSet<Temperature> Temperature { get; set; }
-			public DbSet<MotionSensor> MotionSensors { get; set; }
+			public DbSet<MotionSensor> MotionSensor { get; set; }
 
 		#endregion
 
