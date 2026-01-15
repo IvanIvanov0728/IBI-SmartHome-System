@@ -1,0 +1,114 @@
+@model IBI_SmartHome_System.Service.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@*
+    when i start adding SignalR When the CurrentTemperature changes it should update when the value is +1 or -1
+*@
+
+<header class="mb-5 d-flex flex-column flex-md-row align-items-end justify-content-between gap-4">
+    <div>
+        <h1 class="display-4 fw-bold text-dark">Good Morning, Ivan </h1>
+        <p class="text-muted fs-5">@DateTime.Now.ToString("dddd, MMMM dd")</p>
+    </div>
+    @if (Model.WeatherOutside != null && Model.WeatherOutside.Current != null)
+    {
+        <div class="d-flex gap-4">
+            <div class="d-flex align-items-center gap-2 px-4 py-2 bg-white rounded-pill shadow-sm border">
+                <i data-lucide="cloud" class="text-muted"></i>
+                <span class="fw-medium">@Model.WeatherOutside.Current.Temperature.ToString("0.0")℃</span>
+                <span class="text-muted small">@Model.WeatherOutside.Current.Description</span>
+            </div>
+            <div class="d-flex align-items-center gap-2 px-4 py-2 bg-white rounded-pill shadow-sm border">
+                <i data-lucide="droplets" class="text-primary"></i>
+                <span class="fw-medium">@Model.WeatherOutside.Current.Humidity%</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex gap-4">
+            <div class="d-flex align-items-center gap-2 px-4 py-2 bg-white rounded-pill shadow-sm border">
+                <i data-lucide="cloud" class="text-muted"></i>
+                <span class="fw-medium">--℃</span>
+                <span class="text-muted small">--</span>
+            </div>
+            <div class="d-flex align-items-center gap-2 px-4 py-2 bg-white rounded-pill shadow-sm border">
+                <i data-lucide="droplets" class="text-primary"></i>
+                <span class="fw-medium">--%</span>
+            </div>
+        </div>
+    }
+</header>
+
+<section class="mb-5 position-relative overflow-hidden rounded-5 shadow-lg" style="aspect-ratio: 21/9;">
+    <img src="/images/living-room.jpg" alt="Living Room" class="position-absolute w-100 h-100 object-fit-cover">
+    <div class="position-absolute top-0 start-0 end-0 bottom-0 p-5 d-flex flex-column justify-content-end text-white" style="background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.1));">
+        <div class="col-md-6">
+            <span class="badge bg-white bg-opacity-25 text-white mb-2">Active Room</span>
+            <h2 class="display-5 fw-bold">Living Room</h2>
+            @* prez view modela da mo davam danite az tazi staq *@ 
+            <p class="lead">3 devices active • @Model.CurrentTemperature.ToString()°C • Air Quality Good</p>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <section class="mb-5">
+            <h3 class="fs-4 fw-semibold mb-3">Quick Scenes</h3>
+            <partial name="_QuickActions" />
+        </section>
+
+        <section>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="fs-4 fw-semibold">Lighting</h3>
+                <a href="#" class="text-primary fw-medium">View All</a>
+            </div>
+            <div class="row g-4">
+                @foreach (var light in Model.Lights)
+                {
+                    <div class="col-md-6">
+                        <partial name="_LightControl" model="light" />
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="d-flex flex-column gap-4">
+            <partial name="_Thermostat" />
+
+            <div class="card rounded-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title fs-5 fw-semibold mb-0">Security</h3>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="spinner-grow spinner-grow-sm text-success" role="status"></div>
+                            <span class="text-muted small">Online</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="p-2 bg-success-subtle text-success rounded-2">
+                                    <i data-lucide="lock"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-medium small">Front Door</div>
+                                    <div class="text-muted small">Locked</div>
+                                </div>
+                            </div>
+                            <span class="badge bg-success-subtle text-success">Safe</span>
+                        </div>
+                        <div class="aspect-ratio ratio-16x9 bg-dark rounded-3 d-flex align-items-center justify-content-center text-white-50 small">
+                            View Camera Feed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
