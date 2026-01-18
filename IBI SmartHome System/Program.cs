@@ -1,5 +1,8 @@
 using IBI_SmartHome_System.Data;
 using IBI_SmartHome_System.Service;
+using IBI_SmartHome_System.Service.ClimateService;
+using IBI_SmartHome_System.Service.DashboardService;
+using IBI_SmartHome_System.Service.LightingService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +19,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHostedService<MqttService>();
+
+builder.Services.AddHttpClient<WeatherService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IClimateService, ClimateService>();
+builder.Services.AddScoped<ILightingService, LightingService>();
 
 var app = builder.Build();
 
@@ -40,7 +48,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();
