@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBI_SmartHome_System.Controllers
 {
-	public class DashboardController : Controller
+	[ApiController]
+	[Route("api/[controller]")]
+	public class DashboardController : ControllerBase
 	{
 		private readonly IDashboardService _dashboardService;
 
@@ -12,11 +14,11 @@ namespace IBI_SmartHome_System.Controllers
 			_dashboardService = dashboardService;
 		}
 
-		public async Task<IActionResult> Index()
+		[HttpGet]
+		public async Task<IActionResult> GetDashboard()
 		{
 			var dashboardViewModel = await _dashboardService.GetDashboardViewModelAsync();
-			ViewBag.Thermostat = _dashboardService.GetThermostatViewModel();
-			return View(dashboardViewModel);
+			return Ok(dashboardViewModel);
 		}
 	}
 }
