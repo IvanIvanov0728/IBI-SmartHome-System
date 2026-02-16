@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IBI_SmartHome_System.Service.Models
+{
+	public class RoomViewModel
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public string Floor { get; set; }
+		public IEnumerable<DeviceViewModel> Devices { get; set; }
+	}
+}
