@@ -8,6 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Define a CORS policy name
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+// Add CORS service
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy(name: MyAllowSpecificOrigins,
+					  policy =>
+					  {
+						  policy.WithOrigins("http://localhost:5000") // React app's default dev server port
+								.AllowAnyHeader()
+								.AllowAnyMethod();
+					  });
+});
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -43,6 +58,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors(MyAllowSpecificOrigins); // Use the defined CORS policy
 
 app.UseAuthorization();
 
