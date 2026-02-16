@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBI_SmartHome_System.Controllers
 {
-	public class LightingController : Controller
+	[ApiController]
+	[Route("api/[controller]")]
+	public class LightingController : ControllerBase
 	{
 		private readonly ILightingService _lightingService;
 
@@ -12,10 +14,38 @@ namespace IBI_SmartHome_System.Controllers
 			_lightingService = lightingService;
 		}
 
-		public IActionResult Index()
+		[HttpGet]
+		public IActionResult GetLights()
 		{
 			var viewModel = _lightingService.GetLightingViewModel();
-			return View(viewModel);
+			return Ok(viewModel);
+		}
+
+		[HttpPut("state/{lampid}")]
+		public IActionResult UpdateLightState(int lampid, [FromBody] bool isOn)
+		{
+			var result = _lightingService.UpdateLightState(lampid, isOn);
+			if (!result)
+				return NotFound();
+			return NoContent();
+		}
+
+		[HttpPut("brightness/{lampid}")]
+		public IActionResult UpdateLightBrightness(int lampid, [FromBody] int brightness)
+		{
+			Console.WriteLine($"LampId: {lampid} | Brightness: {brightness}");
+
+			var result = _lightingService.UpdateLightBrightness(lampid, brightness);
+
+			if (!result)
+				return NotFound();
+
+			return NoContent();
+
+			//var result = _lightingService.UpdateLightBrightness(lampid, brightness);
+			//if (!result)
+			//	return NotFound();
+			//return NoContent();
 		}
 	}
 }
