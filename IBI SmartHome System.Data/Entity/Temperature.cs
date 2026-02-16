@@ -13,6 +13,7 @@ namespace IBI_SmartHome_System.Data.Entity
 		public Device? Device { get; set; }
 
 		public double TemperatureValue { get; set; }
+		public int TargetTemperature { get; set; }
 		public int Humidity { get; set; }
 		public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 	}
