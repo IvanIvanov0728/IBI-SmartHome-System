@@ -22,26 +22,39 @@ namespace IBI_SmartHome_System.Service.DashboardService
 
 		public async Task<DashboardViewModel> GetDashboardViewModelAsync()
 		{
-			List<LightControlViewModel> lights = new List<LightControlViewModel>
-			{
-				new LightControlViewModel { Id = 1, Name = "Living Room Main Chandelier", IsOn = true, Brightness = 80 },
-				new LightControlViewModel { Id = 2, Name = "Living Room Floor Lamp", IsOn = true, Brightness = 40 },
-				new LightControlViewModel { Id = 3, Name = "Living Room Cove Lights", IsOn = true, Brightness = 60 },
-				new LightControlViewModel { Id = 4, Name = "Kitchen Island Pendants", IsOn = false, Brightness = 100 },
-				new LightControlViewModel { Id = 5, Name = "Kitchen Under Cabinet", IsOn = true, Brightness = 100 },
-				new LightControlViewModel { Id = 6, Name = "Bedroom Bedside Left", IsOn = false, Brightness = 30 },
-				new LightControlViewModel { Id = 7, Name = "Bedroom Bedside Right", IsOn = false, Brightness = 30 },
-				new LightControlViewModel { Id = 8, Name = "Bedroom Main Overhead", IsOn = false, Brightness = 0 }
-			};
+			List<LightControlViewModel> lights = _context.Lamps
+				.Select(l => new LightControlViewModel
+				{
+					Id = l.Id,
+					DeviceId = l.DeviceId,
+					Name = l.Device.Room.Name,
+					IsOn = l.IsOn,
+					Brightness = l.Brightness,
+					RoomId = l.Device.RoomId
+				}).ToList();
+
+			var rooms = _context.Room
+				.Select(r => new RoomViewModel
+				{
+					Id = r.Id,
+					Name = r.Name,
+					Floor = r.Floor,
+					Devices = r.Devices.Select(d => new DeviceViewModel
+					{
+						Id = d.Id,
+						Name = d.Name,
+						Type = d.Type.ToString()
+					})
+				})
+				.ToList();
 
 			var dashboardViewModel = new DashboardViewModel
 			{
 				Lights = lights,
 				WeatherOutside = await _weatherService.GetWeatherAsync(),
-				TargetTemperature = 28, // add to the db for target temperature and use
-									   // _context.Temperature.Select(t => t.TargetTemperature).FirstOrDefault()
-
-				CurrentTemperature = _context.Temperature.Select(t => t.TemperatureValue).FirstOrDefault()
+				TargetTemperature = _context.Temperature.Select(t => t.TargetTemperature).FirstOrDefault(),
+				CurrentTemperature = _context.Temperature.Select(t => t.TemperatureValue).FirstOrDefault(),
+				Rooms = rooms
 			};
 
 			return dashboardViewModel;
