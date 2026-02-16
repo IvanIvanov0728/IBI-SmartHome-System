@@ -9,5 +9,6 @@ namespace IBI_SmartHome_System.Service.Models
 	public class LightingViewModel
 	{
 		public List<LightControlViewModel> Lights { get; set; }
+		public List<RoomViewModel> Rooms { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
-﻿using IBI_SmartHome_System.Service.Models;
+﻿using IBI_SmartHome_System.Data;
+using IBI_SmartHome_System.Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,61 @@ namespace IBI_SmartHome_System.Service.LightingService
 {
 	public class LightingService : ILightingService
 	{
+		private readonly ApplicationDbContext _context;
+
+		public LightingService(ApplicationDbContext context)
+		{
+			_context = context;
+		}
+
+
 		public LightingViewModel GetLightingViewModel()
 		{
+			var rooms = _context.Room
+				.Select(r => new RoomViewModel
+				{
+					Id = r.Id,
+					Name = r.Name,
+					Floor = r.Floor
+				})
+				.ToList();
+
+			List<LightControlViewModel> lights = _context.Lamps
+				.Select(l => new LightControlViewModel
+				{
+					Id = l.Id,
+					Name = l.Device.Room.Name,
+					IsOn = l.IsOn,
+					Brightness = l.Brightness,
+					RoomId = l.Device.RoomId
+				}).ToList();
+
 			var viewModel = new LightingViewModel
 			{
-				Lights = new List<LightControlViewModel>
-				{
-					new LightControlViewModel { Id = 1, Name = "Living Room Main Chandelier", IsOn = true, Brightness = 80 },
-					new LightControlViewModel { Id = 2, Name = "Living Room Floor Lamp", IsOn = true, Brightness = 40 },
-					new LightControlViewModel { Id = 3, Name = "Living Room Cove Lights", IsOn = true, Brightness = 60 },
-					new LightControlViewModel { Id = 4, Name = "Kitchen Island Pendants", IsOn = false, Brightness = 100 },
-					new LightControlViewModel { Id = 5, Name = "Kitchen Under Cabinet", IsOn = true, Brightness = 100 },
-					new LightControlViewModel { Id = 6, Name = "Bedroom Bedside Left", IsOn = false, Brightness = 30 },
-					new LightControlViewModel { Id = 7, Name = "Bedroom Bedside Right", IsOn = false, Brightness = 30 },
-					new LightControlViewModel { Id = 8, Name = "Bedroom Main Overhead", IsOn = false, Brightness = 0 }
-				}
+				Rooms = rooms,
+				Lights = lights
 			};
 			return viewModel;
+		}
+
+		public bool UpdateLightState(int lightId, bool isOn)
+		{
+			var light = _context.Lamps.FirstOrDefault(l => l.Id == lightId);
+			if (light == null)
+				return false;
+			light.IsOn = isOn;
+			_context.SaveChanges();
+			return true;
+		}
+
+		public bool UpdateLightBrightness(int lightId, int brightness)
+		{
+			var light = _context.Lamps.FirstOrDefault(l => l.Id == lightId);
+			if (light == null)
+				return false;
+			light.Brightness = brightness;
+			_context.SaveChanges();
+			return true;
 		}
 	}
 }
