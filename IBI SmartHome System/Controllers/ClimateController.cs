@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBI_SmartHome_System.Controllers
 {
-	public class ClimateController : Controller
+	[ApiController]
+	[Route("api/[controller]")]
+	public class ClimateController : ControllerBase
 	{
 		private readonly IClimateService _climateService;
 
@@ -12,10 +14,18 @@ namespace IBI_SmartHome_System.Controllers
 			_climateService = climateService;
 		}
 
-		public IActionResult Index()
+		[HttpGet]
+		public IActionResult GetClimateStatus()
 		{
 			var viewModel = _climateService.GetClimateViewModel();
-			return View(viewModel);
+			return Ok(viewModel);
+		}
+
+		[HttpPut("temperature")]
+		public async Task<IActionResult> UpdateTemperature([FromBody] UpdateTemperatureRequest request)
+		{
+			await _climateService.UpdateTargetTemperature(request.TargetTemperature);
+			return Ok();
 		}
 	}
 }
