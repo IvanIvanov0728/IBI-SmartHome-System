@@ -11,6 +11,7 @@ namespace IBI_SmartHome_System.Service.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public double Temperature { get; set; }
+		public int TargetTemperature { get; set; }
 		public float Humidity { get; set; }
 	}
 }

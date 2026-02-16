@@ -10,5 +10,6 @@ namespace IBI_SmartHome_System.Service.ClimateService
 	public interface IClimateService
 	{
 		ClimateViewModel GetClimateViewModel();
+		Task UpdateTargetTemperature(int temperature);
 	}
 }
