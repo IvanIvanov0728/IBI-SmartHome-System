@@ -65,6 +65,23 @@ namespace IBI_SmartHome_System.Service.ClimateService
 			};
 		}
 
+		public async Task<ClimateScheduleViewModel> AddScheduleEntryAsync(ClimateScheduleViewModel newEntry)
+		{
+			var schedule = new ClimateSchedule
+			{
+				Day = newEntry.Day,
+				Time = newEntry.Time,
+				Temp = newEntry.Temp,
+				Mode = newEntry.Mode
+			};
+
+			_context.ClimateSchedules.Add(schedule);
+			await _context.SaveChangesAsync();
+
+			newEntry.Id = schedule.Id;
+			return newEntry;
+		}
+
 
 
 	}
