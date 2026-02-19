@@ -27,5 +27,12 @@ namespace IBI_SmartHome_System.Controllers
 			await _climateService.UpdateTargetTemperature(request.TargetTemperature);
 			return Ok();
 		}
+
+		[HttpGet("schedule")]
+		public async Task<IActionResult> GetSchedule()
+		{
+			//var schedule = await _climateService.GetScheduleAsync();
+			//return Ok(schedule);
+		}
 	}
 }
