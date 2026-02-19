@@ -67,7 +67,8 @@ namespace IBI_SmartHome_System.Service.DashboardService
 				Id = t.Id,
 				Name = t.Device.Name,
 				Temperature = t.TemperatureValue,
-				Humidity = t.Humidity
+				Humidity = t.Humidity,
+				TargetTemperature = t.TargetTemperature
 			}).FirstOrDefault();
 		}
 	}
