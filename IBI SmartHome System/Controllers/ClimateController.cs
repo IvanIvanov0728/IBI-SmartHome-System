@@ -31,8 +31,15 @@ namespace IBI_SmartHome_System.Controllers
 		[HttpGet("schedule")]
 		public async Task<IActionResult> GetSchedule()
 		{
-			//var schedule = await _climateService.GetScheduleAsync();
-			//return Ok(schedule);
+			var schedule = await _climateService.GetScheduleAsync();
+			return Ok(schedule);
+		}
+
+		[HttpPost("schedule")]
+		public async Task<IActionResult> AddScheduleEntry([FromBody] Service.Models.ClimateScheduleViewModel newEntry)
+		{
+			var addedEntry = await _climateService.AddScheduleEntryAsync(newEntry);
+			return CreatedAtAction(nameof(GetSchedule), new { id = addedEntry.Id }, addedEntry);
 		}
 	}
 }
