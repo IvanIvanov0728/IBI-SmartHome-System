@@ -45,5 +45,19 @@ namespace IBI_SmartHome_System.Service.ClimateService
 				await _context.SaveChangesAsync();
 			}
 		}
+
+		public async Task<IEnumerable<ClimateScheduleViewModel>> GetScheduleAsync()
+		{
+			return await _context.ClimateSchedules
+				.Select(s => new ClimateScheduleViewModel
+				{
+					Id = s.Id,
+					Day = s.Day,
+					Time = s.Time,
+					Temp = s.Temp,
+					Mode = s.Mode
+				})
+				.ToListAsync();
+		}
 	}
 }

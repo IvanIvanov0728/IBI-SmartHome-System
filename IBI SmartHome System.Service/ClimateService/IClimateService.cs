@@ -9,7 +9,11 @@ namespace IBI_SmartHome_System.Service.ClimateService
 {
 	public interface IClimateService
 	{
-		ClimateViewModel GetClimateViewModel();
-		Task UpdateTargetTemperature(int temperature);
+		Task<ClimateViewModel> GetClimateViewModelAsync();
+		Task UpdateTargetTemperature(int targetTemperature);
+		Task<IEnumerable<ClimateScheduleViewModel>> GetScheduleAsync();
+		//Task<ClimateScheduleViewModel> AddScheduleEntryAsync(ClimateScheduleViewModel newEntry);
+		//Task<bool> UpdateScheduleEntryAsync(int id, ClimateScheduleViewModel updatedEntry);
+		Task<bool> DeleteScheduleEntryAsync(int id);
 	}
 }
