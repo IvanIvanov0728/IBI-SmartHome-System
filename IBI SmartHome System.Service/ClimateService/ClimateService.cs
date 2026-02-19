@@ -1,4 +1,5 @@
 ﻿using IBI_SmartHome_System.Data;
+using IBI_SmartHome_System.Data.Entity;
 using IBI_SmartHome_System.Service.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,32 +19,15 @@ namespace IBI_SmartHome_System.Service.ClimateService
 			_context = context;
 		}
 
-		public ClimateViewModel GetClimateViewModel()
+		public async Task UpdateTargetTemperature(int targetTemperature)
 		{
-			var viewModel = new ClimateViewModel
+			var temps = await _context.Temperature.ToListAsync();
+			foreach (var temp in temps)
 			{
-
-
-				Thermostats = _context.Temperature.Select(t => new ThermostatViewModel
-				{
-					Id = t.Id,
-					Name = t.Device.Name,
-					Temperature = t.TemperatureValue,
-					Humidity = t.Humidity,
-					TargetTemperature = t.TargetTemperature
-				}).ToList()
-			};
-			return viewModel;
-		}
-
-		public async Task UpdateTargetTemperature(int temperature)
-		{
-			var firstThermostat = await _context.Temperature.FirstOrDefaultAsync();
-			if (firstThermostat != null)
-			{
-				firstThermostat.TargetTemperature = temperature;
-				await _context.SaveChangesAsync();
+				temp.TargetTemperature = targetTemperature;
 			}
+
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<ClimateScheduleViewModel>> GetScheduleAsync()
@@ -59,5 +43,29 @@ namespace IBI_SmartHome_System.Service.ClimateService
 				})
 				.ToListAsync();
 		}
+
+		public async Task<ClimateViewModel> GetClimateViewModelAsync()
+		{
+			var thermostats = await _context.Temperature
+				.Include(t => t.Device)
+				.Select(t => new ThermostatViewModel
+				{
+					Humidity = t.Humidity,
+					TargetTemperature = t.TargetTemperature
+				})
+				.ToListAsync();
+
+			var firstThermostat = thermostats.FirstOrDefault();
+
+			return new ClimateViewModel
+			{
+				CurrentTemperature = firstThermostat?.Temperature ?? 0,
+				TargetTemperature = firstThermostat?.TargetTemperature ?? 0,
+				Thermostats = thermostats
+			};
+		}
+
+
+
 	}
 }
