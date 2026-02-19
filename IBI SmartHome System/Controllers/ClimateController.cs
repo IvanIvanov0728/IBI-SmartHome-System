@@ -17,7 +17,7 @@ namespace IBI_SmartHome_System.Controllers
 		[HttpGet]
 		public IActionResult GetClimateStatus()
 		{
-			var viewModel = _climateService.GetClimateViewModel();
+			var viewModel = _climateService.GetClimateViewModelAsync();
 			return Ok(viewModel);
 		}
 

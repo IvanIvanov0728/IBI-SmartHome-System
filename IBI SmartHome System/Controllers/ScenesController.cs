@@ -1,0 +1,24 @@
+﻿using IBI_SmartHome_System.Service.SceneService;
+using Microsoft.AspNetCore.Mvc;
+
+namespace IBI_SmartHome_System.Controllers
+{
+	[ApiController]
+	[Route("api/[controller]")]
+	public class ScenesController : ControllerBase
+	{
+		private readonly ISceneService _sceneService;
+
+		public ScenesController(ISceneService sceneService)
+		{
+			_sceneService = sceneService;
+		}
+
+		[HttpPost("execute/{id}")]
+		public async Task<IActionResult> Execute(int id)
+		{
+			await _sceneService.ExecuteSceneAsync(id);
+			return Ok();
+		}
+	}
+}
