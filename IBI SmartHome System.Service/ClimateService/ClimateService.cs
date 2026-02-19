@@ -26,7 +26,6 @@ namespace IBI_SmartHome_System.Service.ClimateService
 			{
 				temp.TargetTemperature = targetTemperature;
 			}
-
 			await _context.SaveChangesAsync();
 		}
 
@@ -80,6 +79,24 @@ namespace IBI_SmartHome_System.Service.ClimateService
 
 			newEntry.Id = schedule.Id;
 			return newEntry;
+		}
+
+		public async Task<bool> UpdateScheduleEntryAsync(int id, ClimateScheduleViewModel updatedEntry)
+		{
+			var schedule = await _context.ClimateSchedules.FindAsync(id);
+
+			if (schedule == null)
+			{
+				return false;
+			}
+
+			schedule.Day = updatedEntry.Day;
+			schedule.Time = updatedEntry.Time;
+			schedule.Temp = updatedEntry.Temp;
+			schedule.Mode = updatedEntry.Mode;
+
+			await _context.SaveChangesAsync();
+			return true;
 		}
 
 
