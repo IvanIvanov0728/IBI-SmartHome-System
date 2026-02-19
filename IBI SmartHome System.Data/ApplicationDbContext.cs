@@ -22,7 +22,8 @@ namespace IBI_SmartHome_System.Data
             public DbSet<Lamp> Lamps { get; set; }
             public DbSet<Temperature> Temperature { get; set; }
 			public DbSet<MotionSensor> MotionSensor { get; set; }
-
+			public DbSet<Scene> Scenes { get; set; }
+			public DbSet<SceneAction> SceneActions { get; set; }
 			public DbSet<ClimateSchedule> ClimateSchedules { get; set; }
 
 		#endregion
@@ -74,9 +75,12 @@ namespace IBI_SmartHome_System.Data
 				modelBuilder.ApplyConfiguration(new LampsConfiguration());
 				modelBuilder.ApplyConfiguration(new MotionSensorsConfiguration());
 				modelBuilder.ApplyConfiguration(new TemperatureConfiguration());
+				modelBuilder.ApplyConfiguration(new ScenesConfiguration());
+				modelBuilder.ApplyConfiguration(new SceneActionsConfiguration());
+				modelBuilder.ApplyConfiguration(new ClimateScheduleConfiguration());
 			#endregion
 
-			}
+		}
 		#endregion
 	}
 }
