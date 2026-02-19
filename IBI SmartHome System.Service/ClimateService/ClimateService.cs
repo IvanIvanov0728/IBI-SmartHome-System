@@ -99,6 +99,19 @@ namespace IBI_SmartHome_System.Service.ClimateService
 			return true;
 		}
 
+		public async Task<bool> DeleteScheduleEntryAsync(int id)
+		{
+			var schedule = await _context.ClimateSchedules.FindAsync(id);
+
+			if (schedule == null)
+			{
+				return false;
+			}
+
+			_context.ClimateSchedules.Remove(schedule);
+			await _context.SaveChangesAsync();
+			return true;
+		}
 
 
 	}
