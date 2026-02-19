@@ -23,6 +23,8 @@ namespace IBI_SmartHome_System.Data
             public DbSet<Temperature> Temperature { get; set; }
 			public DbSet<MotionSensor> MotionSensor { get; set; }
 
+			public DbSet<ClimateSchedule> ClimateSchedules { get; set; }
+
 		#endregion
 
 
