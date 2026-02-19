@@ -53,5 +53,17 @@ namespace IBI_SmartHome_System.Controllers
 
 			return NoContent();
 		}
+
+		[HttpDelete("schedule/{id}")]
+		public async Task<IActionResult> DeleteScheduleEntry(int id)
+		{
+			var result = await _climateService.DeleteScheduleEntryAsync(id);
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return NoContent();
+		}
 	}
 }
