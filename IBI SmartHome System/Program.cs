@@ -2,7 +2,9 @@ using IBI_SmartHome_System.Data;
 using IBI_SmartHome_System.Service;
 using IBI_SmartHome_System.Service.ClimateService;
 using IBI_SmartHome_System.Service.DashboardService;
+using IBI_SmartHome_System.Service.EnergyService;
 using IBI_SmartHome_System.Service.LightingService;
+using IBI_SmartHome_System.Service.SceneService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +41,8 @@ builder.Services.AddHttpClient<WeatherService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IClimateService, ClimateService>();
 builder.Services.AddScoped<ILightingService, LightingService>();
+builder.Services.AddScoped<ISceneService, SceneService>();
+builder.Services.AddScoped<IEnergyService, EnergyService>();
 
 var app = builder.Build();
 
