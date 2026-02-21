@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IBI_SmartHome_System.Service.SceneService
 {
-	internal class SceneService : ISceneService
+	public class SceneService : ISceneService
 	{
 		private readonly ApplicationDbContext _context;
 
