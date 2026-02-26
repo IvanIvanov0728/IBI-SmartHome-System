@@ -15,37 +15,32 @@ namespace IBI_SmartHome_System.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetLights()
+		public async Task<IActionResult> GetLights()
 		{
-			var viewModel = _lightingService.GetLightingViewModel();
+			var viewModel = await _lightingService.GetLightingViewModel();
 			return Ok(viewModel);
 		}
 
 		[HttpPut("state/{lampid}")]
-		public IActionResult UpdateLightState(int lampid, [FromBody] bool isOn)
+		public async Task<IActionResult> UpdateLightState(int lampid, [FromBody] bool isOn)
 		{
-			var result = _lightingService.UpdateLightState(lampid, isOn);
+			var result = await _lightingService.UpdateLightState(lampid, isOn);
 			if (!result)
 				return NotFound();
 			return NoContent();
 		}
 
 		[HttpPut("brightness/{lampid}")]
-		public IActionResult UpdateLightBrightness(int lampid, [FromBody] int brightness)
+		public async Task<IActionResult> UpdateLightBrightness(int lampid, [FromBody] int brightness)
 		{
 			Console.WriteLine($"LampId: {lampid} | Brightness: {brightness}");
 
-			var result = _lightingService.UpdateLightBrightness(lampid, brightness);
+			var result = await _lightingService.UpdateLightBrightness(lampid, brightness);
 
 			if (!result)
 				return NotFound();
 
 			return NoContent();
-
-			//var result = _lightingService.UpdateLightBrightness(lampid, brightness);
-			//if (!result)
-			//	return NotFound();
-			//return NoContent();
 		}
 	}
 }
