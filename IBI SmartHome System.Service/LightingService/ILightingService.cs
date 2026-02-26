@@ -8,8 +8,8 @@ namespace IBI_SmartHome_System.Service.LightingService
 {
 	public interface ILightingService
 	{
-		LightingViewModel GetLightingViewModel();
-		bool UpdateLightState(int lightId, bool isOn);
-		bool UpdateLightBrightness(int lightId, int brightness);
+		Task<LightingViewModel> GetLightingViewModel();
+		Task<bool> UpdateLightState(int lightId, bool isOn);
+		Task<bool> UpdateLightBrightness(int lightId, int brightness);
 	}
 }
