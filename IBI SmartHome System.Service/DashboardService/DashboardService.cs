@@ -1,11 +1,10 @@
 ﻿using IBI_SmartHome_System.Data;
 using IBI_SmartHome_System.Service.Models;
 using IBI_SmartHome_System.Service.Weather;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using IBI_SmartHome_System.Data.Entity;
 
 namespace IBI_SmartHome_System.Service.DashboardService
 {
@@ -13,16 +12,52 @@ namespace IBI_SmartHome_System.Service.DashboardService
 	{
 		private readonly WeatherService _weatherService;
 		private readonly ApplicationDbContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public DashboardService(WeatherService weatherService, ApplicationDbContext context)
+		public DashboardService(WeatherService weatherService, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_weatherService = weatherService;
 			_context = context;
+			_httpContextAccessor = httpContextAccessor;
+		}
+
+		private async Task<int?> GetCurrentUserHouseIdAsync()
+		{
+			var user = _httpContextAccessor.HttpContext?.User;
+
+			if (user?.Identity?.IsAuthenticated != true)
+				return null;
+
+			// 1. Try the standard way
+			// 2. Try the long URI explicitly (matching your debug output)
+			// 3. Try "sub" (standard JWT/OIDC)
+			var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+						 ?? user.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value
+						 ?? user.FindFirst("sub")?.Value;
+
+			if (string.IsNullOrEmpty(userId)) return null;
+
+			// Now that we have "8e445865-a24d-4543-a6c6-9443d048cdb9", this query will work
+			var house = await _context.Houses.FirstOrDefaultAsync(h => h.UserId == userId);
+
+			return house?.Id;
 		}
 
 		public async Task<DashboardViewModel> GetDashboardViewModelAsync()
 		{
-			List<LightControlViewModel> lights = _context.Lamps
+			var houseId = await GetCurrentUserHouseIdAsync();
+
+			// If houseId is null here, the UserId in the 'Houses' table 
+			// does not match '8e445865-a24d-4543-a6c6-9443d048cdb9'
+			if (!houseId.HasValue) return new DashboardViewModel { Rooms = new List<RoomViewModel>() };
+
+			var house = await _context.Houses.FindAsync(houseId.Value);
+			double lat = house?.Latitude ?? 42.70;
+			double lon = house?.Longitude ?? 23.32;
+
+			var lights = await _context.Lamps
+				.Include(l => l.Device).ThenInclude(d => d.Room)
+				.Where(l => l.Device.Room.HouseId == houseId.Value)
 				.Select(l => new LightControlViewModel
 				{
 					Id = l.Id,
@@ -31,9 +66,10 @@ namespace IBI_SmartHome_System.Service.DashboardService
 					IsOn = l.IsOn,
 					Brightness = l.Brightness,
 					RoomId = l.Device.RoomId
-				}).ToList();
+				}).ToListAsync();
 
-			var rooms = _context.Room
+			var rooms = await _context.Room
+				.Where(r => r.HouseId == houseId.Value)
 				.Select(r => new RoomViewModel
 				{
 					Id = r.Id,
@@ -46,30 +82,38 @@ namespace IBI_SmartHome_System.Service.DashboardService
 						Type = d.Type.ToString()
 					})
 				})
-				.ToList();
+				.ToListAsync();
 
-			var dashboardViewModel = new DashboardViewModel
+			var tempEntity = await _context.Temperature
+			.Include(t => t.Device)
+			.ThenInclude(d => d.Room)
+			.FirstOrDefaultAsync(t => t.Device.Room.HouseId == houseId.Value);
+
+			return new DashboardViewModel
 			{
 				Lights = lights,
-				WeatherOutside = await _weatherService.GetWeatherAsync(),
-				TargetTemperature = _context.Temperature.Select(t => t.TargetTemperature).FirstOrDefault(),
-				CurrentTemperature = _context.Temperature.Select(t => t.TemperatureValue).FirstOrDefault(),
-				Rooms = rooms
+				WeatherOutside = await _weatherService.GetWeatherAsync(lat, lon),
+				Rooms = rooms,
+				TargetTemperature = tempEntity?.TargetTemperature ?? 21, // Fallback value
+				CurrentTemperature = tempEntity?.TemperatureValue ?? 20.0  // Fallback value
 			};
-
-			return dashboardViewModel;
 		}
 
-		public ThermostatViewModel GetThermostatViewModel()
+		public async Task<ThermostatViewModel> GetThermostatViewModel()
 		{
-			return _context.Temperature.Select(t => new ThermostatViewModel
-			{
-				Id = t.Id,
-				Name = t.Device.Name,
-				Temperature = t.TemperatureValue,
-				Humidity = t.Humidity,
-				TargetTemperature = t.TargetTemperature
-			}).FirstOrDefault();
+			var houseId = await GetCurrentUserHouseIdAsync();
+			if (!houseId.HasValue) return null;
+
+			return await _context.Temperature
+				.Where(t => t.Device.Room.HouseId == houseId.Value)
+				.Select(t => new ThermostatViewModel
+				{
+					Id = t.Id,
+					Name = t.Device.Name,
+					Temperature = t.TemperatureValue,
+					Humidity = t.Humidity,
+					TargetTemperature = t.TargetTemperature
+				}).FirstOrDefaultAsync();
 		}
 	}
 }
