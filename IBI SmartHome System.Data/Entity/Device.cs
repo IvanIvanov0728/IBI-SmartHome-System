@@ -18,6 +18,14 @@ namespace IBI_SmartHome_System.Data.Entity
 		public int RoomId { get; set; }
 		public Room? Room { get; set; }
 
+		public int HouseId { get; set; } // For multi-tenancy
+		public House House { get; set; } // Navigation property
+
+		// Security-related properties
+		public bool IsLocked { get; set; } = false;
+		public bool IsDoor { get; set; } = false;
+		public bool IsWindow { get; set; } = false;
+
 		public Lamp? Lamp { get; set; }
 		public Temperature? Temperature { get; set; }
 		public MotionSensor? MotionSensor { get; set; }
