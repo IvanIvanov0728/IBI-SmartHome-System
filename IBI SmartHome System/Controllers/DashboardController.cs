@@ -1,8 +1,10 @@
 ﻿using IBI_SmartHome_System.Service.DashboardService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBI_SmartHome_System.Controllers
 {
+	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class DashboardController : ControllerBase
