@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IBI_SmartHome_System.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251205100731_init")]
+    [Migration("20260225085359_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -25,6 +25,177 @@ namespace IBI_SmartHome_System.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ActivityLogEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("ActivityLogEntries");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DarkModeEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReceiveNotifications")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("UserRole")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Camera", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsLive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreamUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("Cameras");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ClimateSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Day")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Temp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("ClimateSchedules");
+                });
+
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Device", b =>
                 {
                     b.Property<int>("Id")
@@ -32,6 +203,18 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDoor")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsWindow")
+                        .HasColumnType("bit");
 
                     b.Property<string>("MqttTopic")
                         .HasColumnType("nvarchar(max)");
@@ -48,35 +231,43 @@ namespace IBI_SmartHome_System.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HouseId");
+
                     b.HasIndex("RoomId");
 
                     b.ToTable("Device");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 101,
-                            MqttTopic = "telemetry/lamp/livingroom",
-                            Name = "Living Room Lamp",
-                            RoomId = 11,
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 401,
-                            MqttTopic = "telemetry/motionsensor/livingroom",
-                            Name = "Living Room Motion Sensor",
-                            RoomId = 11,
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 701,
-                            MqttTopic = "telemetry/tempsensor/livingroom",
-                            Name = "Living Room Temperature Sensor",
-                            RoomId = 11,
-                            Type = 2
-                        });
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.House", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Houses");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Lamp", b =>
@@ -104,17 +295,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("DeviceId")
                         .IsUnique();
 
-                    b.ToTable("Lamp");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Brightness = 75,
-                            Color = 1,
-                            DeviceId = 101,
-                            IsOn = false
-                        });
+                    b.ToTable("Lamps");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.MotionSensor", b =>
@@ -146,16 +327,6 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("MotionSensor");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BatteryLevel = 100.0,
-                            DeviceId = 401,
-                            IsMotionDetected = false,
-                            SensitivityLevel = 7
-                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.MqttMessage", b =>
@@ -184,7 +355,7 @@ namespace IBI_SmartHome_System.Data.Migrations
 
                     b.HasIndex("DeviceId");
 
-                    b.ToTable("MqttMessage");
+                    b.ToTable("MqttMessages");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Room", b =>
@@ -199,105 +370,71 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Room");
+                    b.HasIndex("HouseId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 11,
-                            Floor = "First",
-                            Name = "Living Room/Kitchen"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Floor = "First",
-                            Name = "Guest Bedroom"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Floor = "First",
-                            Name = "Utility"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Floor = "First",
-                            Name = "Bathroom"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Floor = "First",
-                            Name = "Hallway"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Floor = "First",
-                            Name = "Mudroom"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Floor = "Second",
-                            Name = "Master Bedroom"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Floor = "Second",
-                            Name = "Master Bathroom"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Floor = "Second",
-                            Name = "Ivan Bedroom"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Floor = "Second",
-                            Name = "Ivan Bathroom"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Floor = "Second",
-                            Name = "Neli Bedroom"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Floor = "Second",
-                            Name = "Neli Bathroom"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            Floor = "Second",
-                            Name = "Hallway"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            Floor = "Second",
-                            Name = "Office"
-                        },
-                        new
-                        {
-                            Id = 99,
-                            Floor = "Ground",
-                            Name = "Outdoor"
-                        });
+                    b.ToTable("Room");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Scene", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("Scenes");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.SceneAction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Property")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SceneId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("SceneId");
+
+                    b.ToTable("SceneActions");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Temperature", b =>
@@ -314,6 +451,9 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.Property<int>("Humidity")
                         .HasColumnType("int");
 
+                    b.Property<int>("TargetTemperature")
+                        .HasColumnType("int");
+
                     b.Property<double>("TemperatureValue")
                         .HasColumnType("float");
 
@@ -326,16 +466,6 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Temperature");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DeviceId = 701,
-                            Humidity = 45,
-                            TemperatureValue = 22.5,
-                            Timestamp = new DateTime(2025, 12, 5, 5, 7, 31, 503, DateTimeKind.Utc).AddTicks(1336)
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -390,71 +520,6 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -483,12 +548,10 @@ namespace IBI_SmartHome_System.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -525,12 +588,10 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -540,15 +601,73 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Device", b =>
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ActivityLogEntry", b =>
                 {
-                    b.HasOne("IBI_SmartHome_System.Data.Entity.Room", "Room")
-                        .WithMany("Devices")
-                        .HasForeignKey("RoomId")
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId");
+
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.House", "House")
+                        .WithMany("ActivityLogEntries")
+                        .HasForeignKey("HouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Device");
+
+                    b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Camera", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.House", "House")
+                        .WithMany("Cameras")
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ClimateSchedule", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.House", "House")
+                        .WithMany("ClimateSchedules")
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Device", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.House", "House")
+                        .WithMany()
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Room", "Room")
+                        .WithMany("Devices")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("House");
+
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.House", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Lamp", b =>
@@ -584,6 +703,47 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.Navigation("Device");
                 });
 
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Room", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.House", "House")
+                        .WithMany("Rooms")
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Scene", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.House", "House")
+                        .WithMany("Scenes")
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.SceneAction", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Scene", "Scene")
+                        .WithMany("SceneActions")
+                        .HasForeignKey("SceneId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+
+                    b.Navigation("Scene");
+                });
+
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Temperature", b =>
                 {
                     b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "Device")
@@ -606,7 +766,7 @@ namespace IBI_SmartHome_System.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -615,7 +775,7 @@ namespace IBI_SmartHome_System.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -630,7 +790,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -639,7 +799,7 @@ namespace IBI_SmartHome_System.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -657,9 +817,27 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.Navigation("Temperature");
                 });
 
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.House", b =>
+                {
+                    b.Navigation("ActivityLogEntries");
+
+                    b.Navigation("Cameras");
+
+                    b.Navigation("ClimateSchedules");
+
+                    b.Navigation("Rooms");
+
+                    b.Navigation("Scenes");
+                });
+
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Room", b =>
                 {
                     b.Navigation("Devices");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Scene", b =>
+                {
+                    b.Navigation("SceneActions");
                 });
 #pragma warning restore 612, 618
         }
