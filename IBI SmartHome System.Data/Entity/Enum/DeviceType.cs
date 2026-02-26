@@ -10,6 +10,7 @@ namespace IBI_SmartHome_System.Data.Entity.Enum
 	{
 		Lamp = 1,
 		TemperatureSensor = 2,
-		MotionSensor = 3
+		MotionSensor = 3,
+		Generic = 4
 	}
 }
