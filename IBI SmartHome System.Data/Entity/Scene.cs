@@ -14,6 +14,9 @@ namespace IBI_SmartHome_System.Data.Entity
 		[Required]
 		public string Name { get; set; }
 
+		public int HouseId { get; set; } // Link to House
+		public House House { get; set; } // Navigation property
+
 		public ICollection<SceneAction> SceneActions { get; set; } = new List<SceneAction>();
 	}
 }
