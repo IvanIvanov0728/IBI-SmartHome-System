@@ -12,7 +12,7 @@ namespace IBI_SmartHome_System.Data.Seeding
 	{
 		public static IEnumerable<Device> Seed()
 		{
-			// for now i will only add one of each device type in the Livingroom/Kitchen
+			int adminHouseId = 1;
 
 			List<Device> devices = new List<Device>()
 			{
@@ -22,7 +22,8 @@ namespace IBI_SmartHome_System.Data.Seeding
 					RoomId = 11,
 					Name = "Living Room Lamp",
 					Type = DeviceType.Lamp,
-					MqttTopic = "telemetry/lamp/livingroom"
+					MqttTopic = "telemetry/lamp/livingroom",
+					HouseId = adminHouseId // The house it belongs to
 				},
 				new Device()
 				{
@@ -30,7 +31,8 @@ namespace IBI_SmartHome_System.Data.Seeding
 					RoomId = 11,
 					Name = "Living Room Motion Sensor",
 					Type = DeviceType.MotionSensor,
-					MqttTopic = "telemetry/motionsensor/livingroom"
+					MqttTopic = "telemetry/motionsensor/livingroom",
+					HouseId = adminHouseId
 				},
 				new Device()
 				{
@@ -38,7 +40,42 @@ namespace IBI_SmartHome_System.Data.Seeding
 					RoomId = 11,
 					Name = "Living Room Temperature Sensor",
 					Type = DeviceType.TemperatureSensor,
-					MqttTopic = "telemetry/tempsensor/livingroom"
+					MqttTopic = "telemetry/tempsensor/livingroom",
+					HouseId = adminHouseId
+				},
+                // Security Devices for SecurityPage.tsx
+                new Device()
+				{
+					Id = 801,
+					RoomId = 11, // Living Room
+                    Name = "Front Door",
+					Type = DeviceType.Generic, // Use generic for security devices
+                    MqttTopic = "security/door/front",
+					HouseId = adminHouseId,
+					IsDoor = true,
+					IsLocked = true
+				},
+				new Device()
+				{
+					Id = 802,
+					RoomId = 11, // Living Room
+                    Name = "Back Door",
+					Type = DeviceType.Generic,
+					MqttTopic = "security/door/back",
+					HouseId = adminHouseId,
+					IsDoor = true,
+					IsLocked = false
+				},
+				new Device()
+				{
+					Id = 803,
+					RoomId = 12, // Guest Bedroom
+                    Name = "Guest Window",
+					Type = DeviceType.Generic,
+					MqttTopic = "security/window/guest",
+					HouseId = adminHouseId,
+					IsWindow = true,
+					IsLocked = true
 				}
 			};
 			return devices;
