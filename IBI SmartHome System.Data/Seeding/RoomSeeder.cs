@@ -11,97 +11,113 @@ namespace IBI_SmartHome_System.Data.Seeding
 	{
 		public static IEnumerable<Room> Seed()
 		{
+			int adminHouseId = 1; // Corresponds to the seeded admin house
 			List<Room> rooms = new List<Room>
 			{
 				new Room
 				{
 					Id = 11,
 					Floor = "First",
-					Name = "Living Room/Kitchen"
+					Name = "Living Room/Kitchen",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 12,
 					Floor = "First",
-					Name = "Guest Bedroom"
+					Name = "Guest Bedroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 13,
 					Floor = "First",
-					Name = "Utility"
+					Name = "Utility",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 14,
 					Floor = "First",
-					Name = "Bathroom"
+					Name = "Bathroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 15,
 					Floor = "First",
-					Name = "Hallway"
+					Name = "Hallway",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 16,
 					Floor = "First",
-					Name = "Mudroom"
+					Name = "Mudroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 21,
 					Floor = "Second",
-					Name = "Master Bedroom"
+					Name = "Master Bedroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 22,
 					Floor = "Second",
-					Name = "Master Bathroom"
+					Name = "Master Bathroom",
+					HouseId = adminHouseId
 				},
 				 new Room
 				{
 					Id = 23,
 					Floor = "Second",
-					Name = "Ivan Bedroom"
+					Name = "Ivan Bedroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 24,
 					Floor = "Second",
-					Name = "Ivan Bathroom"
+					Name = "Ivan Bathroom",
+					HouseId = adminHouseId
 				},
 				 new Room
 				{
 					Id = 25,
 					Floor = "Second",
-					Name = "Neli Bedroom"
+					Name = "Neli Bedroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 26,
 					Floor = "Second",
-					Name = "Neli Bathroom"
+					Name = "Neli Bathroom",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 27,
 					Floor = "Second",
-					Name = "Hallway"
+					Name = "Hallway",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 28,
 					Floor = "Second",
-					Name = "Office"
+					Name = "Office",
+					HouseId = adminHouseId
 				},
 				new Room
 				{
 					Id = 99,
 					Floor = "Ground",
-					Name = "Outdoor"
+					Name = "Outdoor",
+					HouseId = adminHouseId
 				},
 			};
 			return rooms;
