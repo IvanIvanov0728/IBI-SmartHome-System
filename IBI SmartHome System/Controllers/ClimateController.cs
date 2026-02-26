@@ -15,9 +15,9 @@ namespace IBI_SmartHome_System.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetClimateStatus()
+		public IActionResult GetClimateStatus()
 		{
-			var viewModel = await _climateService.GetClimateViewModelAsync();
+			var viewModel = _climateService.GetClimateViewModelAsync();
 			return Ok(viewModel);
 		}
 

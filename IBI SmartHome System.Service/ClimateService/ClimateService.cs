@@ -50,8 +50,7 @@ namespace IBI_SmartHome_System.Service.ClimateService
 				.Select(t => new ThermostatViewModel
 				{
 					Humidity = t.Humidity,
-					TargetTemperature = t.TargetTemperature,
-					Temperature = t.TemperatureValue,
+					TargetTemperature = t.TargetTemperature
 				})
 				.ToListAsync();
 
