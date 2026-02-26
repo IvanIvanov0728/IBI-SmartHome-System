@@ -11,12 +11,13 @@ namespace IBI_SmartHome_System.Data.Seeding
 	{
 		public static IEnumerable<Scene> Seed()
 		{
+			int adminHouseId = 1;
 			var scenes = new List<Scene>
 			{
-				new Scene { Id = 1, Name = "Arrive Home" },
-				new Scene { Id = 2, Name = "Leave Home" },
-				new Scene { Id = 3, Name = "Good Morning" },
-				new Scene { Id = 4, Name = "Good Night" }
+				new Scene { Id = 1, Name = "Arrive Home", HouseId = adminHouseId },
+				new Scene { Id = 2, Name = "Leave Home", HouseId = adminHouseId },
+				new Scene { Id = 3, Name = "Good Morning", HouseId = adminHouseId },
+				new Scene { Id = 4, Name = "Good Night", HouseId = adminHouseId }
 			};
 
 			return scenes;
