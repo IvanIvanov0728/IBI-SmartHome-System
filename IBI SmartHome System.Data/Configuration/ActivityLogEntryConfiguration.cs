@@ -1,4 +1,5 @@
 ﻿using IBI_SmartHome_System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IBI_SmartHome_System.Data.Configuration
 {
-	public class ActivityLogEntryConfiguration
+	public class ActivityLogEntryConfiguration : IEntityTypeConfiguration<ActivityLogEntry>
 	{
 		public void Configure(EntityTypeBuilder<ActivityLogEntry> builder)
 		{
