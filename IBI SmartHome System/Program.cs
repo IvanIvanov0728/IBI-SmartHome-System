@@ -1,10 +1,13 @@
 using IBI_SmartHome_System.Data;
 using IBI_SmartHome_System.Service;
+using IBI_SmartHome_System.Service.AdminService;
 using IBI_SmartHome_System.Service.ClimateService;
 using IBI_SmartHome_System.Service.DashboardService;
 using IBI_SmartHome_System.Service.EnergyService;
 using IBI_SmartHome_System.Service.LightingService;
 using IBI_SmartHome_System.Service.SceneService;
+using IBI_SmartHome_System.Service.SecurityService;
+using IBI_SmartHome_System.Service.SettingsService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IBI_SmartHome_System.Data.Entity.ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IBI_SmartHome_System.Data.Entity.ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
 	.AddRoles<IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -70,8 +73,9 @@ builder.Services.AddScoped<IClimateService, ClimateService>();
 builder.Services.AddScoped<ILightingService, LightingService>();
 builder.Services.AddScoped<ISceneService, SceneService>();
 builder.Services.AddScoped<IEnergyService, EnergyService>();
-//builder.Services.AddScoped<ISecurityService, SecurityService>();
-//builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<ISecurityService, SecurityService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
 

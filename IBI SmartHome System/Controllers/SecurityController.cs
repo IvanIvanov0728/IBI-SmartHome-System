@@ -1,4 +1,5 @@
-﻿using IBI_SmartHome_System.Service.SecurityService;
+﻿using IBI_SmartHome_System.Models;
+using IBI_SmartHome_System.Service.SecurityService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace IBI_SmartHome_System.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize] // All security endpoints require authentication
+	[Authorize]
 	public class SecurityController : ControllerBase
 	{
 		private readonly ISecurityService _securityService;
@@ -39,12 +40,5 @@ namespace IBI_SmartHome_System.Controllers
 			await _securityService.AddActivityLogEntryAsync(request.EventDescription, request.Type, request.DeviceId);
 			return Ok(new { message = "Activity log entry added." });
 		}
-	}
-
-	public class AddActivityLogRequest
-	{
-		public string EventDescription { get; set; }
-		public string Type { get; set; }
-		public int? DeviceId { get; set; }
 	}
 }
