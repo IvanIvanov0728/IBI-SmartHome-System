@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IBI_SmartHome_System.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -329,6 +329,39 @@ namespace IBI_SmartHome_System.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AutomationRules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TriggerDeviceId = table.Column<int>(type: "int", nullable: false),
+                    TriggerType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConditionValue = table.Column<double>(type: "float", nullable: true),
+                    ActionDeviceId = table.Column<int>(type: "int", nullable: false),
+                    ActionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActionValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AutomationRules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AutomationRules_Device_ActionDeviceId",
+                        column: x => x.ActionDeviceId,
+                        principalTable: "Device",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AutomationRules_Device_TriggerDeviceId",
+                        column: x => x.TriggerDeviceId,
+                        principalTable: "Device",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Lamps",
                 columns: table => new
                 {
@@ -496,6 +529,16 @@ namespace IBI_SmartHome_System.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AutomationRules_ActionDeviceId",
+                table: "AutomationRules",
+                column: "ActionDeviceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AutomationRules_TriggerDeviceId",
+                table: "AutomationRules",
+                column: "TriggerDeviceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cameras_HouseId",
                 table: "Cameras",
                 column: "HouseId");
@@ -584,6 +627,9 @@ namespace IBI_SmartHome_System.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "AutomationRules");
 
             migrationBuilder.DropTable(
                 name: "Cameras");

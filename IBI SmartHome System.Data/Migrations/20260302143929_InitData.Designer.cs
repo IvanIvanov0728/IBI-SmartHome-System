@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IBI_SmartHome_System.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260225085359_init")]
-    partial class init
+    [Migration("20260302143929_InitData")]
+    partial class InitData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,42 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("HouseId");
 
                     b.ToTable("ActivityLogEntries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeviceId = 801,
+                            Event = "Front Door Locked",
+                            HouseId = 1,
+                            Timestamp = new DateTime(2026, 3, 2, 14, 34, 29, 181, DateTimeKind.Utc).AddTicks(6719),
+                            Type = "info"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Event = "Motion Detected at Front Porch",
+                            HouseId = 1,
+                            Timestamp = new DateTime(2026, 3, 2, 14, 24, 29, 181, DateTimeKind.Utc).AddTicks(6723),
+                            Type = "warning"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DeviceId = 802,
+                            Event = "Back Door Unlocked",
+                            HouseId = 1,
+                            Timestamp = new DateTime(2026, 3, 2, 14, 9, 29, 181, DateTimeKind.Utc).AddTicks(6725),
+                            Type = "info"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Event = "Admin Logged In",
+                            HouseId = 1,
+                            Timestamp = new DateTime(2026, 3, 2, 13, 39, 29, 181, DateTimeKind.Utc).AddTicks(6727),
+                            Type = "success"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ApplicationUser", b =>
@@ -133,6 +169,54 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.AutomationRule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionDeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ActionValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("ConditionValue")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TriggerDeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TriggerType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionDeviceId");
+
+                    b.HasIndex("TriggerDeviceId");
+
+                    b.ToTable("AutomationRules");
+                });
+
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Camera", b =>
                 {
                     b.Property<int>("Id")
@@ -160,6 +244,24 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("HouseId");
 
                     b.ToTable("Cameras");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            HouseId = 1,
+                            IsLive = true,
+                            Name = "Front Porch Camera",
+                            StreamUrl = "https://example.com/stream/frontporch"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            HouseId = 1,
+                            IsLive = false,
+                            Name = "Backyard Camera",
+                            StreamUrl = "https://example.com/stream/backyard"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.ClimateSchedule", b =>
@@ -194,6 +296,53 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("HouseId");
 
                     b.ToTable("ClimateSchedules");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Day = "Mon-Fri",
+                            HouseId = 1,
+                            Mode = "Heat",
+                            Temp = "72°",
+                            Time = "07:00 AM"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Day = "Mon-Fri",
+                            HouseId = 1,
+                            Mode = "Eco",
+                            Temp = "68°",
+                            Time = "09:00 AM"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Day = "Mon-Fri",
+                            HouseId = 1,
+                            Mode = "Heat",
+                            Temp = "72°",
+                            Time = "05:00 PM"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Day = "Sat-Sun",
+                            HouseId = 1,
+                            Mode = "Heat",
+                            Temp = "72°",
+                            Time = "08:00 AM"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Day = "Sat-Sun",
+                            HouseId = 1,
+                            Mode = "Sleep",
+                            Temp = "67°",
+                            Time = "11:00 PM"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Device", b =>
@@ -236,6 +385,80 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Device");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 101,
+                            HouseId = 1,
+                            IsDoor = false,
+                            IsLocked = false,
+                            IsWindow = false,
+                            MqttTopic = "telemetry/lamp/livingroom",
+                            Name = "Living Room Lamp",
+                            RoomId = 11,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 401,
+                            HouseId = 1,
+                            IsDoor = false,
+                            IsLocked = false,
+                            IsWindow = false,
+                            MqttTopic = "telemetry/motionsensor/livingroom",
+                            Name = "Living Room Motion Sensor",
+                            RoomId = 11,
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = 701,
+                            HouseId = 1,
+                            IsDoor = false,
+                            IsLocked = false,
+                            IsWindow = false,
+                            MqttTopic = "telemetry/tempsensor/livingroom",
+                            Name = "Living Room Temperature Sensor",
+                            RoomId = 11,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = 801,
+                            HouseId = 1,
+                            IsDoor = true,
+                            IsLocked = true,
+                            IsWindow = false,
+                            MqttTopic = "security/door/front",
+                            Name = "Front Door",
+                            RoomId = 11,
+                            Type = 4
+                        },
+                        new
+                        {
+                            Id = 802,
+                            HouseId = 1,
+                            IsDoor = true,
+                            IsLocked = false,
+                            IsWindow = false,
+                            MqttTopic = "security/door/back",
+                            Name = "Back Door",
+                            RoomId = 11,
+                            Type = 4
+                        },
+                        new
+                        {
+                            Id = 803,
+                            HouseId = 1,
+                            IsDoor = false,
+                            IsLocked = true,
+                            IsWindow = true,
+                            MqttTopic = "security/window/guest",
+                            Name = "Guest Window",
+                            RoomId = 12,
+                            Type = 4
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.House", b =>
@@ -268,6 +491,17 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Houses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "123 Smart Home Lane, Sofia",
+                            Latitude = 42.700000000000003,
+                            Longitude = 23.32,
+                            Name = "Admin's Home",
+                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Lamp", b =>
@@ -296,6 +530,16 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Lamps");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Brightness = 75,
+                            Color = 1,
+                            DeviceId = 101,
+                            IsOn = false
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.MotionSensor", b =>
@@ -327,6 +571,16 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("MotionSensor");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BatteryLevel = 100.0,
+                            DeviceId = 401,
+                            IsMotionDetected = false,
+                            SensitivityLevel = 7
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.MqttMessage", b =>
@@ -382,6 +636,113 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("HouseId");
 
                     b.ToTable("Room");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 11,
+                            Floor = "First",
+                            HouseId = 1,
+                            Name = "Living Room/Kitchen"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Floor = "First",
+                            HouseId = 1,
+                            Name = "Guest Bedroom"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Floor = "First",
+                            HouseId = 1,
+                            Name = "Utility"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Floor = "First",
+                            HouseId = 1,
+                            Name = "Bathroom"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Floor = "First",
+                            HouseId = 1,
+                            Name = "Hallway"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Floor = "First",
+                            HouseId = 1,
+                            Name = "Mudroom"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Master Bedroom"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Master Bathroom"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Ivan Bedroom"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Ivan Bathroom"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Neli Bedroom"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Neli Bathroom"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Hallway"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Floor = "Second",
+                            HouseId = 1,
+                            Name = "Office"
+                        },
+                        new
+                        {
+                            Id = 99,
+                            Floor = "Ground",
+                            HouseId = 1,
+                            Name = "Outdoor"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Scene", b =>
@@ -404,6 +765,32 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("HouseId");
 
                     b.ToTable("Scenes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            HouseId = 1,
+                            Name = "Arrive Home"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            HouseId = 1,
+                            Name = "Leave Home"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            HouseId = 1,
+                            Name = "Good Morning"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            HouseId = 1,
+                            Name = "Good Night"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.SceneAction", b =>
@@ -435,6 +822,64 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.HasIndex("SceneId");
 
                     b.ToTable("SceneActions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeviceId = 101,
+                            Property = "Power",
+                            SceneId = 1,
+                            Value = "true"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DeviceId = 101,
+                            Property = "Power",
+                            SceneId = 2,
+                            Value = "false"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DeviceId = 101,
+                            Property = "Power",
+                            SceneId = 3,
+                            Value = "true"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DeviceId = 101,
+                            Property = "Brightness",
+                            SceneId = 3,
+                            Value = "100"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DeviceId = 101,
+                            Property = "Color",
+                            SceneId = 3,
+                            Value = "White"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DeviceId = 101,
+                            Property = "Power",
+                            SceneId = 4,
+                            Value = "false"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DeviceId = 701,
+                            Property = "TemperatureValue",
+                            SceneId = 4,
+                            Value = "18"
+                        });
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Temperature", b =>
@@ -466,6 +911,17 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Temperature");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeviceId = 701,
+                            Humidity = 45,
+                            TargetTemperature = 0,
+                            TemperatureValue = 22.5,
+                            Timestamp = new DateTime(2026, 3, 2, 9, 39, 29, 181, DateTimeKind.Utc).AddTicks(6265)
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -616,6 +1072,25 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.Navigation("Device");
 
                     b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.AutomationRule", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "ActionDevice")
+                        .WithMany()
+                        .HasForeignKey("ActionDeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "TriggerDevice")
+                        .WithMany()
+                        .HasForeignKey("TriggerDeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ActionDevice");
+
+                    b.Navigation("TriggerDevice");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Camera", b =>

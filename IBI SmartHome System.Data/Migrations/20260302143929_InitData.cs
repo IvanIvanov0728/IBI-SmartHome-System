@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IBI_SmartHome_System.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MoreData : Migration
+    public partial class InitData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,8 +23,8 @@ namespace IBI_SmartHome_System.Data.Migrations
                 columns: new[] { "Id", "DeviceId", "Event", "HouseId", "Timestamp", "Type" },
                 values: new object[,]
                 {
-                    { 2, null, "Motion Detected at Front Porch", 1, new DateTime(2026, 2, 25, 8, 40, 15, 838, DateTimeKind.Utc).AddTicks(3014), "warning" },
-                    { 4, null, "Admin Logged In", 1, new DateTime(2026, 2, 25, 7, 55, 15, 838, DateTimeKind.Utc).AddTicks(3017), "success" }
+                    { 2, null, "Motion Detected at Front Porch", 1, new DateTime(2026, 3, 2, 14, 24, 29, 181, DateTimeKind.Utc).AddTicks(6723), "warning" },
+                    { 4, null, "Admin Logged In", 1, new DateTime(2026, 3, 2, 13, 39, 29, 181, DateTimeKind.Utc).AddTicks(6727), "success" }
                 });
 
             migrationBuilder.InsertData(
@@ -99,8 +99,8 @@ namespace IBI_SmartHome_System.Data.Migrations
                 columns: new[] { "Id", "DeviceId", "Event", "HouseId", "Timestamp", "Type" },
                 values: new object[,]
                 {
-                    { 1, 801, "Front Door Locked", 1, new DateTime(2026, 2, 25, 8, 50, 15, 838, DateTimeKind.Utc).AddTicks(2993), "info" },
-                    { 3, 802, "Back Door Unlocked", 1, new DateTime(2026, 2, 25, 8, 25, 15, 838, DateTimeKind.Utc).AddTicks(3016), "info" }
+                    { 1, 801, "Front Door Locked", 1, new DateTime(2026, 3, 2, 14, 34, 29, 181, DateTimeKind.Utc).AddTicks(6719), "info" },
+                    { 3, 802, "Back Door Unlocked", 1, new DateTime(2026, 3, 2, 14, 9, 29, 181, DateTimeKind.Utc).AddTicks(6725), "info" }
                 });
 
             migrationBuilder.InsertData(
@@ -130,7 +130,7 @@ namespace IBI_SmartHome_System.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Temperature",
                 columns: new[] { "Id", "DeviceId", "Humidity", "TargetTemperature", "TemperatureValue", "Timestamp" },
-                values: new object[] { 1, 701, 45, 0, 22.5, new DateTime(2026, 2, 25, 3, 55, 15, 838, DateTimeKind.Utc).AddTicks(2710) });
+                values: new object[] { 1, 701, 45, 0, 22.5, new DateTime(2026, 3, 2, 9, 39, 29, 181, DateTimeKind.Utc).AddTicks(6265) });
         }
 
         /// <inheritdoc />

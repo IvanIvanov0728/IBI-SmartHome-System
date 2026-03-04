@@ -29,6 +29,7 @@ namespace IBI_SmartHome_System.Data
 			public DbSet<ActivityLogEntry> ActivityLogEntries { get; set; }
 			public DbSet<Camera> Cameras { get; set; }
 			public DbSet<House> Houses { get; set; }
+			public DbSet<AutomationRule> AutomationRules { get; set; }
 
 		#endregion
 
@@ -84,6 +85,18 @@ namespace IBI_SmartHome_System.Data
 				.WithMany()
 				.HasForeignKey(sa => sa.DeviceId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			modelBuilder.Entity<AutomationRule>()
+				.HasOne(ar => ar.TriggerDevice) // Assuming this is the navigation property name
+				.WithMany()
+				.HasForeignKey(ar => ar.TriggerDeviceId)
+				.OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+
+			modelBuilder.Entity<AutomationRule>()
+				.HasOne(ar => ar.ActionDevice) // Assuming this is the navigation property name
+				.WithMany()
+				.HasForeignKey(ar => ar.ActionDeviceId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 			// 5. House to Other Entities
 			modelBuilder.Entity<House>().HasMany(h => h.Scenes).WithOne(s => s.House).HasForeignKey(s => s.HouseId).OnDelete(DeleteBehavior.Cascade);

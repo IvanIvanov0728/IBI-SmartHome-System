@@ -61,7 +61,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                             DeviceId = 801,
                             Event = "Front Door Locked",
                             HouseId = 1,
-                            Timestamp = new DateTime(2026, 2, 24, 17, 49, 8, 371, DateTimeKind.Utc).AddTicks(4142),
+                            Timestamp = new DateTime(2026, 3, 2, 14, 34, 29, 181, DateTimeKind.Utc).AddTicks(6719),
                             Type = "info"
                         },
                         new
@@ -69,7 +69,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                             Id = 2,
                             Event = "Motion Detected at Front Porch",
                             HouseId = 1,
-                            Timestamp = new DateTime(2026, 2, 24, 17, 39, 8, 371, DateTimeKind.Utc).AddTicks(4147),
+                            Timestamp = new DateTime(2026, 3, 2, 14, 24, 29, 181, DateTimeKind.Utc).AddTicks(6723),
                             Type = "warning"
                         },
                         new
@@ -78,7 +78,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                             DeviceId = 802,
                             Event = "Back Door Unlocked",
                             HouseId = 1,
-                            Timestamp = new DateTime(2026, 2, 24, 17, 24, 8, 371, DateTimeKind.Utc).AddTicks(4150),
+                            Timestamp = new DateTime(2026, 3, 2, 14, 9, 29, 181, DateTimeKind.Utc).AddTicks(6725),
                             Type = "info"
                         },
                         new
@@ -86,7 +86,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                             Id = 4,
                             Event = "Admin Logged In",
                             HouseId = 1,
-                            Timestamp = new DateTime(2026, 2, 24, 16, 54, 8, 371, DateTimeKind.Utc).AddTicks(4152),
+                            Timestamp = new DateTime(2026, 3, 2, 13, 39, 29, 181, DateTimeKind.Utc).AddTicks(6727),
                             Type = "success"
                         });
                 });
@@ -164,27 +164,54 @@ namespace IBI_SmartHome_System.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "1fcf7a81-2182-4f4b-80df-6e0d74ac23db",
-                            DarkModeEnabled = false,
-                            Email = "admin@smarthome.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@SMARTHOME.COM",
-                            NormalizedUserName = "ADMIN@SMARTHOME.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFAK...",
-                            PhoneNumberConfirmed = false,
-                            ReceiveNotifications = true,
-                            SecurityStamp = "d6e87f89-8d8a-4c2d-9f5b-1c5b8b9b8b9b",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@smarthome.com",
-                            UserRole = "Admin"
-                        });
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.AutomationRule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionDeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ActionValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("ConditionValue")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TriggerDeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TriggerType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionDeviceId");
+
+                    b.HasIndex("TriggerDeviceId");
+
+                    b.ToTable("AutomationRules");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Camera", b =>
@@ -890,7 +917,7 @@ namespace IBI_SmartHome_System.Data.Migrations
                             Humidity = 45,
                             TargetTemperature = 0,
                             TemperatureValue = 22.5,
-                            Timestamp = new DateTime(2026, 2, 24, 12, 54, 8, 371, DateTimeKind.Utc).AddTicks(3660)
+                            Timestamp = new DateTime(2026, 3, 2, 9, 39, 29, 181, DateTimeKind.Utc).AddTicks(6265)
                         });
                 });
 
@@ -1042,6 +1069,25 @@ namespace IBI_SmartHome_System.Data.Migrations
                     b.Navigation("Device");
 
                     b.Navigation("House");
+                });
+
+            modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.AutomationRule", b =>
+                {
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "ActionDevice")
+                        .WithMany()
+                        .HasForeignKey("ActionDeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IBI_SmartHome_System.Data.Entity.Device", "TriggerDevice")
+                        .WithMany()
+                        .HasForeignKey("TriggerDeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ActionDevice");
+
+                    b.Navigation("TriggerDevice");
                 });
 
             modelBuilder.Entity("IBI_SmartHome_System.Data.Entity.Camera", b =>
