@@ -18,12 +18,20 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> GetClimateStatus()
 		{
 			var viewModel = await _climateService.GetClimateViewModelAsync();
+			if (viewModel == null)
+			{
+				return NotFound();
+			}
 			return Ok(viewModel);
 		}
 
 		[HttpPut("temperature")]
 		public async Task<IActionResult> UpdateTemperature([FromBody] UpdateTemperatureRequest request)
 		{
+			if (request == null)
+			{
+				return BadRequest("Invalid request.");
+			}
 			await _climateService.UpdateTargetTemperature(request.TargetTemperature);
 			return Ok();
 		}
@@ -32,13 +40,25 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> GetSchedule()
 		{
 			var schedule = await _climateService.GetScheduleAsync();
+			if (schedule == null)
+			{
+				return NotFound();
+			}
 			return Ok(schedule);
 		}
 
 		[HttpPost("schedule")]
 		public async Task<IActionResult> AddScheduleEntry([FromBody] Service.Models.ClimateScheduleViewModel newEntry)
 		{
+			if (newEntry == null)
+			{
+				return BadRequest("Invalid entry.");
+			}
 			var addedEntry = await _climateService.AddScheduleEntryAsync(newEntry);
+			if (addedEntry == null)
+			{
+				return BadRequest("Could not add entry.");
+			}
 			return CreatedAtAction(nameof(GetSchedule), new { id = addedEntry.Id }, addedEntry);
 		}
 
