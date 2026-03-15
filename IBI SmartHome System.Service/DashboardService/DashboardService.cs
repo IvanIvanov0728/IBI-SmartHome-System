@@ -56,13 +56,13 @@ namespace IBI_SmartHome_System.Service.DashboardService
 			double lon = house?.Longitude ?? 23.32;
 
 			var lights = await _context.Lamps
-				.Include(l => l.Device).ThenInclude(d => d.Room)
+				.Include(l => l.Device)
 				.Where(l => l.Device.Room.HouseId == houseId.Value)
 				.Select(l => new LightControlViewModel
 				{
 					Id = l.Id,
 					DeviceId = l.DeviceId,
-					Name = l.Device.Room.Name,
+					Name = l.Device.Name,
 					IsOn = l.IsOn,
 					Brightness = l.Brightness,
 					RoomId = l.Device.RoomId
