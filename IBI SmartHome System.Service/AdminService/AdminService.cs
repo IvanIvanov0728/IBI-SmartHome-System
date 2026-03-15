@@ -45,7 +45,9 @@ namespace IBI_SmartHome_System.Service.AdminService
 			{
 				Name = model.Name,
 				Address = model.Address,
-				UserId = model.UserId
+				UserId = model.UserId,
+				Longitude = model.Longitude,
+				Latitude = model.Latitude
 			};
 
 			_context.Houses.Add(house);
@@ -129,6 +131,7 @@ namespace IBI_SmartHome_System.Service.AdminService
 					{
 						Id = r.Id,
 						Name = r.Name,
+						Floor = r.Floor,
 						Devices = r.Devices.Select(d => new DeviceHierarchyViewModel
 						{
 							Id = d.Id,
