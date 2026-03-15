@@ -20,6 +20,12 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> GetDashboard()
 		{
 			var dashboardViewModel = await _dashboardService.GetDashboardViewModelAsync();
+
+			if (dashboardViewModel == null)
+			{
+				return NotFound();
+			}
+
 			return Ok(dashboardViewModel);
 		}
 	}
