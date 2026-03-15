@@ -18,6 +18,10 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> Get()
 		{
 			var energyData = await _energyService.GetEnergyDataAsync();
+			if (energyData == null)
+			{
+				return NotFound();
+			}
 			return Ok(energyData);
 		}
 	}
