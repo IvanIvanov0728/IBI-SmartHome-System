@@ -17,7 +17,11 @@ namespace IBI_SmartHome_System.Controllers
 		[HttpPost("execute/{id}")]
 		public async Task<IActionResult> Execute(int id)
 		{
-			await _sceneService.ExecuteSceneAsync(id);
+			bool result = await _sceneService.ExecuteSceneAsync(id);
+			if (!result)
+			{
+				return NotFound();
+			}
 			return Ok();
 		}
 	}
