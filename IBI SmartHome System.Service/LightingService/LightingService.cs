@@ -56,12 +56,12 @@ namespace IBI_SmartHome_System.Service.LightingService
 				.ToListAsync();
 
 			var lights = await _context.Lamps
-				.Include(l => l.Device).ThenInclude(d => d.Room)
+				.Include(l => l.Device)
 				.Where(l => l.Device.Room.HouseId == houseId.Value)
 				.Select(l => new LightControlViewModel
 				{
 					Id = l.Id,
-					Name = l.Device.Room.Name,
+					Name = l.Device.Name,
 					IsOn = l.IsOn,
 					Brightness = l.Brightness,
 					RoomId = l.Device.RoomId
