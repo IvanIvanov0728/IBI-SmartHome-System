@@ -8,6 +8,6 @@ namespace IBI_SmartHome_System.Service.SceneService
 {
 	public interface ISceneService
 	{
-		Task ExecuteSceneAsync(int sceneId);
+		Task<bool> ExecuteSceneAsync(int sceneId);
 	}
 }

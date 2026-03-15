@@ -40,10 +40,10 @@ namespace IBI_SmartHome_System.Service.SceneService
 			return house?.Id;
 		}
 
-		public async Task ExecuteSceneAsync(int sceneId)
+		public async Task<bool> ExecuteSceneAsync(int sceneId)
 		{
 			var houseId = await GetCurrentUserHouseIdAsync();
-			if (!houseId.HasValue) return;
+			if (!houseId.HasValue) return false;
 
 			var scene = await _context.Scenes
 				.Include(s => s.SceneActions)
@@ -51,7 +51,7 @@ namespace IBI_SmartHome_System.Service.SceneService
 
 			if (scene == null)
 			{
-				return;
+				return false;
 			}
 
 			foreach (var action in scene.SceneActions)
@@ -101,6 +101,7 @@ namespace IBI_SmartHome_System.Service.SceneService
 			}
 
 			await _context.SaveChangesAsync();
+			return true;
 		}
 	}
 }
