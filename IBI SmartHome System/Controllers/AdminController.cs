@@ -63,6 +63,10 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> GetHierarchy()
 		{
 			var hierarchy = await _adminService.GetHousesWithHierarchyAsync();
+			if (hierarchy == null)
+			{
+				return NotFound();
+			}
 			return Ok(hierarchy);
 		}
 
