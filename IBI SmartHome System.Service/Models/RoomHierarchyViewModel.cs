@@ -10,6 +10,7 @@ namespace IBI_SmartHome_System.Service.Models
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
+		public string Floor { get; set; }
 		public List<DeviceHierarchyViewModel> Devices { get; set; } = new();
 	}
 }

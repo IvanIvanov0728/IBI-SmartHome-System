@@ -17,5 +17,8 @@ namespace IBI_SmartHome_System.Service.Models
 
 		[Required]
 		public string UserId { get; set; }
+
+		public double? Latitude { get; set; }
+		public double? Longitude { get; set; }
 	}
 }
