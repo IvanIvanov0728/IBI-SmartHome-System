@@ -22,6 +22,10 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> GetSecurityOverview()
 		{
 			var overview = await _securityService.GetSecurityOverviewAsync();
+			if (overview == null)
+			{
+				return NotFound();
+			}
 			return Ok(overview);
 		}
 
