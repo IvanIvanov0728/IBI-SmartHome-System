@@ -1,12 +1,11 @@
-﻿using IBI_SmartHome_System.Service.Weather;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IBI_SmartHome_System.Service
+namespace IBI_SmartHome_System.Service.Weather
 {
 	public class WeatherService
 	{
