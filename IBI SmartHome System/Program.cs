@@ -1,13 +1,15 @@
 using IBI_SmartHome_System.Data;
-using IBI_SmartHome_System.Service;
+using IBI_SmartHome_System.Service.Hubs;
 using IBI_SmartHome_System.Service.AdminService;
 using IBI_SmartHome_System.Service.ClimateService;
 using IBI_SmartHome_System.Service.DashboardService;
 using IBI_SmartHome_System.Service.EnergyService;
 using IBI_SmartHome_System.Service.LightingService;
+using IBI_SmartHome_System.Service.MqttService;
 using IBI_SmartHome_System.Service.SceneService;
 using IBI_SmartHome_System.Service.SecurityService;
 using IBI_SmartHome_System.Service.SettingsService;
+using IBI_SmartHome_System.Service.Weather;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +68,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHostedService<MqttService>();
-
+builder.Services.AddSignalR();
 builder.Services.AddHttpClient<WeatherService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IClimateService, ClimateService>();
@@ -76,6 +78,7 @@ builder.Services.AddScoped<IEnergyService, EnergyService>();
 builder.Services.AddScoped<ISecurityService, SecurityService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IMqttMessageHandler, MqttMessageHandler>();
 
 var app = builder.Build();
 
@@ -119,6 +122,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+app.MapHub<SmartHomeHub>("/smartHomeHub");
 app.MapRazorPages();
 
 app.Run();

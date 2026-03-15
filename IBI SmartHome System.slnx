@@ -2,4 +2,6 @@
   <Project Path="IBI SmartHome System.Data/IBI SmartHome System.Data.csproj" Id="0f966137-e11a-4a8b-9d6f-7a867ad528c5" />
   <Project Path="IBI SmartHome System.Service/IBI SmartHome System.Service.csproj" Id="14708165-f30f-4ff7-85ea-d0ec639abd6c" />
   <Project Path="IBI SmartHome System/IBI SmartHome System.csproj" />
+  <Project Path="IBI_SmartHome_System.Tests/IBI_SmartHome_System.Tests.csproj" Id="76afeb47-93c1-4fd3-aea3-a3ca82709033" />
+  <Project Path="IBI_SmartHome_System.UITests/IBI_SmartHome_System.UITests.csproj" Id="1f7f5ac8-0fdf-4953-b8f3-f920d29bfa38" />
 </Solution>
