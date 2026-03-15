@@ -18,6 +18,10 @@ namespace IBI_SmartHome_System.Controllers
 		public async Task<IActionResult> GetLights()
 		{
 			var viewModel = await _lightingService.GetLightingViewModel();
+			if (viewModel == null)
+			{
+				return NotFound();
+			}
 			return Ok(viewModel);
 		}
 
