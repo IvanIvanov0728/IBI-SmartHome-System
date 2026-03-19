@@ -1,9 +1,10 @@
 ﻿using IBI_SmartHome_System.Data;
+using IBI_SmartHome_System.Data.Entity;
 using IBI_SmartHome_System.Data.Entity.Enum;
+using IBI_SmartHome_System.Service.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using IBI_SmartHome_System.Data.Entity;
 
 namespace IBI_SmartHome_System.Service.SceneService
 {
@@ -38,6 +39,22 @@ namespace IBI_SmartHome_System.Service.SceneService
 			var house = await _context.Houses.FirstOrDefaultAsync(h => h.UserId == userId);
 
 			return house?.Id;
+		}
+
+		public async Task<IEnumerable<SceneViewModel>> GetScenesAsync()
+		{
+			var houseId = await GetCurrentUserHouseIdAsync();
+			if (!houseId.HasValue) return Enumerable.Empty<SceneViewModel>();
+
+			return await _context.Scenes
+				.Where(s => s.HouseId == houseId.Value)
+				.Select(s => new SceneViewModel
+				{
+					Id = s.Id,
+					Name = s.Name,
+					IsActive = false // Scenes are typically fire-and-forget, so isActive is usually false unless they are running
+				})
+				.ToListAsync();
 		}
 
 		public async Task<bool> ExecuteSceneAsync(int sceneId)

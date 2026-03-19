@@ -89,11 +89,21 @@ namespace IBI_SmartHome_System.Service.DashboardService
 			.ThenInclude(d => d.Room)
 			.FirstOrDefaultAsync(t => t.Device.Room.HouseId == houseId.Value);
 
+			var scenes = await _context.Scenes
+				.Where(s => s.HouseId == houseId.Value)
+				.Select(s => new SceneViewModel
+				{
+					Id = s.Id,
+					Name = s.Name,
+					IsActive = false
+				}).ToListAsync();
+
 			return new DashboardViewModel
 			{
 				Lights = lights,
 				WeatherOutside = await _weatherService.GetWeatherAsync(lat, lon),
 				Rooms = rooms,
+				Scenes = scenes,
 				TargetTemperature = tempEntity?.TargetTemperature ?? 21, // Fallback value
 				CurrentTemperature = tempEntity?.TemperatureValue ?? 20.0  // Fallback value
 			};

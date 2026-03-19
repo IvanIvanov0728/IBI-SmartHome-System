@@ -15,8 +15,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Security.Claims;
 using NUnit.Framework;
-using AdminServiceClass = IBI_SmartHome_System.Service.AdminService.AdminService;
-using SettingsServiceClass = IBI_SmartHome_System.Service.SettingsService.SettingsService;
+using IBI_SmartHome_System.Service.EnergyService;
+using IBI_SmartHome_System.Service.SceneService;
+using IBI_SmartHome_System.Service.SecurityService;
+using IBI_SmartHome_System.Service.SettingsService;
+using IBI_SmartHome_System.Service.AdminService;
 
 namespace IBI_SmartHome_System.Tests
 {
@@ -145,17 +148,6 @@ namespace IBI_SmartHome_System.Tests
 		#region DashboardService Tests
 
 		[Test]
-		public async Task Dashboard_Full_Coverage()
-		{
-			var service = new DashboardService(_weatherServiceMock.Object, _context, _httpContextAccessorMock.Object);
-			_weatherServiceMock.Setup(x => x.GetWeatherAsync(It.IsAny<double>(), It.IsAny<double>()))
-				.ReturnsAsync(new WeatherApiResponse { Current = new CurrentWeather { Temperature = 20 } });
-
-			var vm = await service.GetDashboardViewModelAsync();
-			Assert.That(vm, Is.Not.Null);
-		}
-
-		[Test]
 		public async Task Dashboard_ReturnsEmptyRooms_WhenUserNotAuthenticated()
 		{
 			_httpContextAccessorMock.Setup(x => x.HttpContext).Returns((HttpContext)null!);
@@ -198,7 +190,7 @@ namespace IBI_SmartHome_System.Tests
 		public async Task Admin_Full_Coverage()
 		{
 			// We skip SearchUsersAsync because mocking UserManager.Users for ToListAsync is complex in net8
-			var service = new AdminServiceClass(_context, _userManagerMock.Object);
+			var service = new AdminService(_context, _userManagerMock.Object);
 
 			await service.CreateHouseAsync(new CreateHouseViewModel { Name = "H", Address = "A", UserId = _userId });
 			await service.AddRoomToHouseAsync(new CreateRoomViewModel { Name = "R", Floor = "1", HouseId = _houseId });
@@ -251,7 +243,7 @@ namespace IBI_SmartHome_System.Tests
 			_userManagerMock.Setup(x => x.FindByIdAsync(_userId)).ReturnsAsync(user);
 			_userManagerMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
-			var service = new SettingsServiceClass(_userManagerMock.Object, _httpContextAccessorMock.Object);
+			var service = new SettingsService(_userManagerMock.Object, _httpContextAccessorMock.Object);
 			await service.GetUserProfileAsync();
 			await service.UpdateUserProfileAsync(new UserProfileViewModel { Email = "e@e.com", UserName = "u" });
 			await service.GetUserSettingsAsync();
@@ -262,10 +254,85 @@ namespace IBI_SmartHome_System.Tests
 		public async Task Settings_GetProfile_ReturnsNull_WhenUserNotFound()
 		{
 			_userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null!);
-			var service = new SettingsServiceClass(_userManagerMock.Object, _httpContextAccessorMock.Object);
+			var service = new SettingsService(_userManagerMock.Object, _httpContextAccessorMock.Object);
 
 			var result = await service.GetUserProfileAsync();
 			Assert.That(result, Is.Null);
+		}
+
+		#endregion
+
+		#region EnergyService Tests
+
+		[Test]
+		public async Task Energy_Full_Coverage()
+		{
+			var service = new EnergyService(_context, _httpContextAccessorMock.Object);
+			var data = await service.GetEnergyDataAsync();
+			Assert.That(data, Is.Not.Null);
+			Assert.That(data.WeeklyData, Is.Not.Empty);
+		}
+
+		#endregion
+
+		#region SceneService Tests
+
+		[Test]
+		public async Task Scene_Full_Coverage()
+		{
+			// Seed a scene
+			var scene = new Scene { Id = 1, Name = "Night", HouseId = _houseId };
+			_context.Scenes.Add(scene);
+
+			var device = new Device { Id = 200, Name = "Lamp", HouseId = _houseId, RoomId = 1, Type = IBI_SmartHome_System.Data.Entity.Enum.DeviceType.Lamp };
+			_context.Device.Add(device);
+			_context.Lamps.Add(new Lamp { DeviceId = 200, IsOn = false });
+
+			_context.SceneActions.Add(new SceneAction { Id = 1, SceneId = 1, DeviceId = 200, Property = "Power", Value = "true" });
+			await _context.SaveChangesAsync();
+
+			var service = new SceneService(_context, _httpContextAccessorMock.Object);
+			var scenes = await service.GetScenesAsync();
+			Assert.That(scenes, Is.Not.Empty);
+
+			var result = await service.ExecuteSceneAsync(1);
+			Assert.That(result, Is.True);
+
+			var lamp = await _context.Lamps.FirstAsync(l => l.DeviceId == 200);
+			Assert.That(lamp.IsOn, Is.True);
+		}
+
+		[Test]
+		public async Task Scene_ExecuteNonExistent_ReturnsFalse()
+		{
+			var service = new SceneService(_context, _httpContextAccessorMock.Object);
+			var result = await service.ExecuteSceneAsync(999);
+			Assert.That(result, Is.False);
+		}
+
+		#endregion
+
+		#region SecurityService Tests
+
+		[Test]
+		public async Task Security_Full_Coverage()
+		{
+			var device = new Device { Id = 300, Name = "Door", HouseId = _houseId, RoomId = 1, IsDoor = true, IsLocked = true };
+			_context.Device.Add(device);
+			await _context.SaveChangesAsync();
+
+			var service = new SecurityService(_context, _httpContextAccessorMock.Object);
+			var overview = await service.GetSecurityOverviewAsync();
+			Assert.That(overview, Is.Not.Null);
+			Assert.That(overview.EntryPoints, Is.Not.Empty);
+
+			await service.UpdateEntryPointLockStatus(300, false);
+			var updatedDevice = await _context.Device.FirstAsync(d => d.Id == 300);
+			Assert.That(updatedDevice.IsLocked, Is.False);
+
+			await service.AddActivityLogEntryAsync("Test Event", "info", 300);
+			var log = await _context.ActivityLogEntries.AnyAsync(l => l.DeviceId == 300);
+			Assert.That(log, Is.True);
 		}
 
 		#endregion

@@ -20,7 +20,7 @@ namespace IBI_SmartHome_System.Data.Seeding
 					Id = 1,
 					HouseId = adminHouseId, // The house it belongs to
                     Name = "Front Porch Camera",
-					StreamUrl = "https://example.com/stream/frontporch", // Placeholder URL
+					StreamUrl = "http://localhost:8080/video", // Placeholder URL
                     IsLive = true
 				},
 				new Camera

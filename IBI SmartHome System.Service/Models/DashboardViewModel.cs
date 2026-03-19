@@ -8,6 +8,7 @@ namespace IBI_SmartHome_System.Service.Models
 		public List<LightControlViewModel> Lights { get; set; }
 		public List<RoomViewModel> Rooms { get; set; }
 		public int TargetTemperature { get; set; }
+		public List<SceneViewModel> Scenes { get; set; }
 
 		public double CurrentTemperature { get; set; }
 

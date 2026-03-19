@@ -14,6 +14,13 @@ namespace IBI_SmartHome_System.Controllers
 			_sceneService = sceneService;
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GetScenes()
+		{
+			var scenes = await _sceneService.GetScenesAsync();
+			return Ok(scenes);
+		}
+
 		[HttpPost("execute/{id}")]
 		public async Task<IActionResult> Execute(int id)
 		{
