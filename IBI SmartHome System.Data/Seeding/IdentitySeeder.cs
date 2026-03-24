@@ -48,6 +48,15 @@ namespace IBI_SmartHome_System.Data.Seeding
 					await userManager.AddToRoleAsync(adminUser, "Admin");
 				}
 			}
+			else if (string.IsNullOrEmpty(adminUser.PasswordHash))
+			{
+				// If user was created by Migration but has no password, set it now
+				var addPassword = await userManager.AddPasswordAsync(adminUser, "Admin123!");
+				if (addPassword.Succeeded)
+				{
+					await userManager.AddToRoleAsync(adminUser, "Admin");
+				}
+			}
 		}
 	}
 }

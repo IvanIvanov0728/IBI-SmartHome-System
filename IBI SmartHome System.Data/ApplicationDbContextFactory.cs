@@ -21,9 +21,9 @@ namespace IBI_SmartHome_System.Data
 
 			// Get connection string, or use a hardcoded fallback if config fails to load
 			var connectionString = configuration.GetConnectionString("DefaultConnection")
-				?? "Server=(localdb)\\mssqllocaldb;Database=IBI_SmartHome_Db;Trusted_Connection=True;MultipleActiveResultSets=true";
+				?? "Server=ibi-smart-home-sys-db-ibi-smart-home-sys-db.c.aivencloud.com;Port=25122;Database=defaultdb;Uid=avnadmin;Pwd=AVNS_Dx3QK_N3tv2lBQvkxGJ;SslMode=Required;CharSet=utf8mb4";
 
-			builder.UseSqlServer(connectionString);
+			builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
 			return new ApplicationDbContext(builder.Options);
 		}

@@ -112,6 +112,18 @@ namespace IBI_SmartHome_System.Data
 			#endregion
 
 			#region Seed Data
+
+				modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
+				{
+					Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
+					UserName = "admin@smarthome.com",
+					NormalizedUserName = "ADMIN@SMARTHOME.COM",
+					Email = "admin@smarthome.com",
+					NormalizedEmail = "ADMIN@SMARTHOME.COM",
+					EmailConfirmed = true,
+					UserRole = "Admin"
+				});
+
 				modelBuilder.ApplyConfiguration(new HousesConfiguration());
 				modelBuilder.ApplyConfiguration(new RoomsConfiguration());
 				modelBuilder.ApplyConfiguration(new DevicesConfiguration());

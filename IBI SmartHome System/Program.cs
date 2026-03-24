@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(connectionString));
+	options.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IBI_SmartHome_System.Data.Entity.ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

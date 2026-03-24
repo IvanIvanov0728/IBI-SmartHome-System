@@ -24,19 +24,36 @@ namespace IBI_SmartHome_System.Service.MqttService
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
-			var Host = _config["ConnectionForHive:Host"];
-			var Port = int.Parse(_config["ConnectionForHive:Port"]);
-			var Username = _config["ConnectionForHive:Username"];
-			var Password = _config["ConnectionForHive:Password"];
+			var host = _config["ConnectionForHive:Host"];
+			var portStr = _config["ConnectionForHive:Port"];
+			var username = _config["ConnectionForHive:Username"];
+			var password = _config["ConnectionForHive:Password"];
+
+			if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(portStr))
+			{
+				Console.WriteLine("MQTT Configuration missing. MqttService will not start.");
+				return;
+			}
+
+			if (!int.TryParse(portStr, out int port))
+			{
+				Console.WriteLine("Invalid MQTT Port. MqttService will not start.");
+				return;
+			}
 
 			var factory = new MqttFactory();
 			_client = factory.CreateMqttClient();
 
-			var options = new MqttClientOptionsBuilder()
-				.WithTcpServer(Host, Port)
-				.WithCredentials(Username, Password)
-				.WithTls()
-				.Build();
+			var optionsBuilder = new MqttClientOptionsBuilder()
+				.WithTcpServer(host, port)
+				.WithCredentials(username, password);
+
+			if (port == 8883) // Common TLS port for HiveMQ
+			{
+				optionsBuilder.WithTls();
+			}
+
+			var options = optionsBuilder.Build();
 
 			_client.ApplicationMessageReceivedAsync += async e =>
 			{
