@@ -1,38 +1,33 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# Use the ASP.NET runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-
-# Tell .NET to listen on port 8080
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
-
-
-# This stage is used to build the service project
+# 1. SDK Stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
+# 2. Copy project files using EXACT names from your screenshot
+# Note the quotes: they are mandatory because of the spaces
 COPY ["IBI SmartHome System/IBI SmartHome System.csproj", "IBI SmartHome System/"]
 COPY ["IBI SmartHome System.Data/IBI SmartHome System.Data.csproj", "IBI SmartHome System.Data/"]
 COPY ["IBI SmartHome System.Service/IBI SmartHome System.Service.csproj", "IBI SmartHome System.Service/"]
 
-# Restore dependencies
-RUN dotnet restore "./IBI SmartHome System/IBI SmartHome System.csproj"
+# 3. Restore dependencies
+RUN dotnet restore "IBI SmartHome System/IBI SmartHome System.csproj"
 
-# Copy everything else and build
+# 4. Copy everything else
 COPY . .
-WORKDIR "/src/IBI SmartHome System"
-RUN dotnet build "./IBI SmartHome System.csproj" -c $BUILD_CONFIGURATION -o /app/build /p:Nullable=disable
 
-# Publish stage
+# 5. Build - we use the full path to the project file
+RUN dotnet build "IBI SmartHome System/IBI SmartHome System.csproj" -c Release -o /app/build /p:Nullable=disable
+
+# 6. Publish
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./IBI SmartHome System.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:Nullable=disable
+RUN dotnet publish "IBI SmartHome System/IBI SmartHome System.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:Nullable=disable
 
-# Final stage
-FROM base AS final
+# 7. Final Stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Railway needs these
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "IBI SmartHome System.dll"]
