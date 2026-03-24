@@ -80,6 +80,9 @@ builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IMqttMessageHandler, MqttMessageHandler>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Seed identity data
@@ -96,6 +99,14 @@ using (var scope = app.Services.CreateScope())
 		logger.LogError(ex, "An error occurred seeding the Identity DB.");
 	}
 }
+
+// Enable Swagger for everyone so we can test on Railway
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+	c.SwaggerEndpoint("/swagger/v1/swagger.json", "IBI SmartHome API V1");
+	c.RoutePrefix = "swagger"; // This makes it live at /swagger
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
