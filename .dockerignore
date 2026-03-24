@@ -1,0 +1,11 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/node_modules
+**/out
+.vscode
+*.user
+*.suo
+*.userosscache
+*.sln.docuser
