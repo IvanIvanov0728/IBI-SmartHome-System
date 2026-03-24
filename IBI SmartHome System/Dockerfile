@@ -24,12 +24,12 @@ RUN dotnet restore "./IBI SmartHome System/IBI SmartHome System.csproj"
 # Copy everything else and build
 COPY . .
 WORKDIR "/src/IBI SmartHome System"
-RUN dotnet build "./IBI SmartHome System.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./IBI SmartHome System.csproj" -c $BUILD_CONFIGURATION -o /app/build /p:Nullable=disable
 
 # Publish stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./IBI SmartHome System.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./IBI SmartHome System.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:Nullable=disable
 
 # Final stage
 FROM base AS final
