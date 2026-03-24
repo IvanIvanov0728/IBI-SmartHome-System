@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+	<Nullable>disable</Nullable>
+	<WarningsAsErrors></WarningsAsErrors>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-IBI_SmartHome_System-249fd0b2-ba9f-4769-8cde-f143d82de729</UserSecretsId>
     <RootNamespace>IBI_SmartHome_System</RootNamespace>
