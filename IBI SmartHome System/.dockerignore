@@ -1,0 +1,21 @@
+﻿# Ignore build artifacts
+**/bin/
+**/obj/
+
+# Ignore IDE settings
+**/.vs/
+**/.vscode/
+*.user
+*.suo
+
+# Ignore Git history (saves a lot of space)
+.git/
+.gitignore
+
+# Ignore Docker files themselves
+Dockerfile
+.dockerignore
+
+# Ignore logs and temp files
+*.log
+.temp/
