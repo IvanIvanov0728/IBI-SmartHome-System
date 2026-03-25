@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 	options.AddPolicy(name: MyAllowSpecificOrigins,
 		policy =>
 		{
-		  policy.AllowAnyOrigin() 
+		  policy.WithOrigins("https://ibi-smarthome-system-frontend-production.up.railway.app") 
 				.AllowAnyHeader()
 				.AllowAnyMethod()
 				.AllowCredentials();
@@ -125,7 +125,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseCors(MyAllowSpecificOrigins); // Use the defined CORS policy
+app.UseCors(MyAllowSpecificOrigins); 
 
 app.UseAuthentication();
 app.UseAuthorization();
