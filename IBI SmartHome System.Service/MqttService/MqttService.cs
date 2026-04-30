@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Client;
 using System.Text;
@@ -13,13 +14,15 @@ namespace IBI_SmartHome_System.Service.MqttService
 	public class MqttService : BackgroundService
 	{
 		private readonly IServiceProvider _sp;
-		private IMqttClient _client;
 		private readonly IConfiguration _config;
+		private readonly ILogger<MqttService> _logger;
+		private IMqttClient _client;
 
-		public MqttService(IServiceProvider sp, IConfiguration config)
+		public MqttService(IServiceProvider sp, IConfiguration config, ILogger<MqttService> logger)
 		{
 			_sp = sp;
 			_config = config;
+			_logger = logger;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -31,13 +34,13 @@ namespace IBI_SmartHome_System.Service.MqttService
 
 			if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(portStr))
 			{
-				Console.WriteLine("MQTT Configuration missing. MqttService will not start.");
+				_logger.LogError("MQTT Configuration missing. MqttService will not start.");
 				return;
 			}
 
 			if (!int.TryParse(portStr, out int port))
 			{
-				Console.WriteLine("Invalid MQTT Port. MqttService will not start.");
+				_logger.LogError("Invalid MQTT Port. MqttService will not start.");
 				return;
 			}
 
@@ -60,16 +63,51 @@ namespace IBI_SmartHome_System.Service.MqttService
 				var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 				var topic = e.ApplicationMessage.Topic;
 
-				using (var scope = _sp.CreateScope())
+				_logger.LogInformation("MQTT message received on topic {Topic}: {Payload}", topic, payload);
+
+				try
 				{
-					var handler = scope.ServiceProvider.GetRequiredService<IMqttMessageHandler>();
-					await handler.HandleMessageAsync(topic, payload);
+					using (var scope = _sp.CreateScope())
+					{
+						var handler = scope.ServiceProvider.GetRequiredService<IMqttMessageHandler>();
+						await handler.HandleMessageAsync(topic, payload);
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Error handling MQTT message on topic {Topic}", topic);
 				}
 			};
 
-			await _client.ConnectAsync(options, stoppingToken);
+			while (!stoppingToken.IsCancellationRequested)
+			{
+				try
+				{
+					if (!_client.IsConnected)
+					{
+						_logger.LogInformation("Attempting to connect to MQTT broker at {Host}:{Port}...", host, port);
+						await _client.ConnectAsync(options, stoppingToken);
+						_logger.LogInformation("Connected to MQTT broker.");
+						await _client.SubscribeAsync("esp32/#");
+						_logger.LogInformation("Subscribed to esp32/# topic.");
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Error connecting to MQTT broker. Retrying in 5 seconds...");
+				}
 
-			await _client.SubscribeAsync("esp32/#");
+				await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+			}
+		}
+
+		public override async Task StopAsync(CancellationToken cancellationToken)
+		{
+			if (_client != null && _client.IsConnected)
+			{
+				await _client.DisconnectAsync(cancellationToken: cancellationToken);
+			}
+			await base.StopAsync(cancellationToken);
 		}
 	}
 }

@@ -24,17 +24,17 @@ builder.Services.AddCors(options =>
 	options.AddPolicy(name: MyAllowSpecificOrigins,
 		policy =>
 		{
-		  policy.WithOrigins("https://ibi-smarthome-system-frontend-production.up.railway.app") 
-				.AllowAnyHeader()
-				.AllowAnyMethod()
-				.AllowCredentials();
+			policy.WithOrigins("https://ibi-smarthome-system-frontend-production.up.railway.app")
+				  .AllowAnyHeader()
+				  .AllowAnyMethod()
+				  .AllowCredentials();
 		});
 });
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString)));
+	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IBI_SmartHome_System.Data.Entity.ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -65,7 +65,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 	};
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 builder.Services.AddHostedService<MqttService>();
 builder.Services.AddSignalR();
@@ -115,25 +115,19 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-	app.UseExceptionHandler("/Home/Error");
-	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseCors(MyAllowSpecificOrigins); 
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-	name: "default",
-	pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+app.MapControllers();
 app.MapHub<SmartHomeHub>("/smartHomeHub");
-app.MapRazorPages();
 
 app.Run();

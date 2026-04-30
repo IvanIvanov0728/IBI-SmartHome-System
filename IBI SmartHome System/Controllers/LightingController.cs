@@ -8,10 +8,12 @@ namespace IBI_SmartHome_System.Controllers
 	public class LightingController : ControllerBase
 	{
 		private readonly ILightingService _lightingService;
+		private readonly ILogger<LightingController> _logger;
 
-		public LightingController(ILightingService lightingService)
+		public LightingController(ILightingService lightingService, ILogger<LightingController> logger)
 		{
 			_lightingService = lightingService;
+			_logger = logger;
 		}
 
 		[HttpGet]
@@ -37,7 +39,7 @@ namespace IBI_SmartHome_System.Controllers
 		[HttpPut("brightness/{lampid}")]
 		public async Task<IActionResult> UpdateLightBrightness(int lampid, [FromBody] int brightness)
 		{
-			Console.WriteLine($"LampId: {lampid} | Brightness: {brightness}");
+			_logger.LogInformation("Updating LampId: {LampId} to Brightness: {Brightness}", lampid, brightness);
 
 			var result = await _lightingService.UpdateLightBrightness(lampid, brightness);
 
