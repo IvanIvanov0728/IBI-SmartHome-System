@@ -24,7 +24,10 @@ builder.Services.AddCors(options =>
 	options.AddPolicy(name: MyAllowSpecificOrigins,
 		policy =>
 		{
-			policy.WithOrigins("https://ibi-smarthome-system-frontend-production.up.railway.app")
+			var allowedOrigins = builder.Configuration["ALLOWED_ORIGINS"]?.Split(',')
+				?? new[] { "https://ibi-smarthome-system-frontend-production.up.railway.app" };
+
+			policy.WithOrigins(allowedOrigins)
 				  .AllowAnyHeader()
 				  .AllowAnyMethod()
 				  .AllowCredentials();
